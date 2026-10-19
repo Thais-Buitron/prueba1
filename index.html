@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="GuideLight: el faro que guía tu alto rendimiento. Asistente para los estudiantes del COAR Lima Provincias, hecho por el equipo TechWorld.">
+<meta property="og:title" content="GuideLight · El faro que guía tu alto rendimiento">
+<meta property="og:description" content="Faro Académico, Brújula, Puerto COAR, La Tripulación y Nuevos Horizontes: pregúntale lo que quieras.">
+<meta name="theme-color" content="#F4F6FB">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2312325A'/%3E%3Cstop offset='1' stop-color='%233B6EF5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='14' fill='url(%23g)'/%3E%3Cpath d='M16 13 Q16 6.5 24 6 Q32 6.5 32 13Z' fill='%23fff'/%3E%3Crect x='17' y='12' width='14' height='10' rx='3' fill='%230B1F3A'/%3E%3Crect x='19.5' y='14' width='9' height='6' rx='1.8' fill='%23FFD15C'/%3E%3Crect x='14.5' y='21.5' width='19' height='3.6' rx='1.8' fill='%23fff'/%3E%3Cpath d='M18 25 H30 L33.5 42 H14.5 Z' fill='%23fff'/%3E%3Crect x='18.6' y='27' width='10.8' height='5.2' rx='2.6' fill='%230B1F3A'/%3E%3Crect x='20.2' y='28.6' width='7.6' height='2' rx='1' fill='%238FE3FF'/%3E%3Cpath d='M16.3 34.5 H31.7 L32.4 38 H15.6 Z' fill='%233B6EF5'/%3E%3Crect x='12.5' y='41' width='23' height='3.6' rx='1.8' fill='%23fff'/%3E%3C/svg%3E">
+<title>GuideLight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap">
+<style>
+/* Diseño: tech estético. Fondo claro con aurora y cuadrícula suave, tarjetas de vidrio,
+   y el faro-bot con los 5 temas girando a su alrededor. */
+:root{
+  color-scheme:light;
+  /* Marca */
+  --navy:#12325A;
+  --navy-deep:#0B1F3A;
+  --blue:#3B6EF5;
+  --blue-soft:#E7EDFF;
+  --lila:#8B7CF6;
+  --gold:#F5B82E;
+  --gold-lamp:#FFD15C;
+  --gold-soft:#FFF3D6;
+  --gold-ink:#8A5A00;
+  --cyan:#8FE3FF;
+  /* Superficies */
+  --bg:#F4F6FB;
+  --ink:#101B2E;
+  --muted:#58657C;
+  --line:#E0E6F0;
+  --white:#FFFFFF;
+  --glass:rgba(255,255,255,.72);
+  --glass-line:rgba(255,255,255,.92);
+  /* Los 5 temas: tonos de un mismo degradado azul → violeta */
+  --c-azul:#2F5FE0; --t-azul:#EDF1FE;
+  --c-coral:#3E56D8; --t-coral:#EEF0FE;
+  --c-turq:#4D4FD3; --t-turq:#F0EFFE;
+  --c-lila:#5E4ACB; --t-lila:#F2EEFE;
+  --c-oro:#6E45C2; --t-oro:#F4EEFD;
+  --tinte:linear-gradient(135deg,#EEF2FE 0%,#F3EEFE 100%);
+  --error:#C2412D;
+  --ok:#17845A;
+  /* Degradados, sombras y formas */
+  --grad:linear-gradient(135deg,#12325A 0%,#3B6EF5 100%);
+  --grad-texto:linear-gradient(92deg,#3B6EF5 0%,#8B7CF6 52%,#F5A623 100%);
+  --shadow-sm:0 6px 18px -10px rgba(16,27,46,.25);
+  --shadow:0 20px 44px -24px rgba(16,27,46,.35);
+  --shadow-lg:0 34px 70px -34px rgba(16,27,46,.45);
+  --glow:0 14px 30px -12px rgba(59,110,245,.6);
+  --r-xl:22px; --r-lg:18px; --r:14px; --r-sm:10px;
+  /* Tipografía */
+  --f-display:"Sora","Segoe UI",system-ui,sans-serif;
+  --f-body:"Manrope","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --gutter:clamp(16px,4vw,40px);
+  --maxw:1200px;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:10px}
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+section[id]{scroll-margin-top:92px}
+.ico{width:1em;height:1em;flex:none}
+
+/* ---------- Encabezados de sección ---------- */
+.sec-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;margin-bottom:34px}
+.kicker{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;border-radius:999px;background:var(--glass);border:1px solid var(--line);box-shadow:var(--shadow-sm);font:600 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+.kicker i{width:8px;height:8px;border-radius:50%;background:var(--grad-texto)}
+.sec-head h2{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,4.3vw,3rem);line-height:1.05;letter-spacing:-.03em;color:var(--navy)}
+.sec-head h2 span{background:var(--grad-texto);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sec-head p{max-width:56ch;color:var(--muted);font-size:1.07rem}
+
+/* ---------- Barra superior ---------- */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding-block:12px}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:62px;padding:0 8px 0 14px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-line);box-shadow:var(--shadow-sm);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4)}
+.marca{display:flex;align-items:center;gap:9px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:21px;letter-spacing:-.02em;color:var(--navy)}
+.marca > span:first-child{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--grad);box-shadow:var(--glow);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.marca > span:first-child svg{width:28px;height:28px}
+.marca:hover > span:first-child{transform:rotate(-8deg) scale(1.06)}
+.marca b{font-weight:700;background:var(--grad-texto);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-links a{padding:8px 14px;border-radius:999px;color:var(--muted);text-decoration:none;font-weight:700;font-size:14.5px;transition:background .2s,color .2s}
+.nav-links a:hover{background:var(--blue-soft);color:var(--navy)}
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:0 24px;border-radius:999px;border:0;font:700 16px/1 var(--f-body);text-decoration:none;cursor:pointer;transition:transform .2s cubic-bezier(.22,1,.36,1),box-shadow .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn-primario{background:var(--grad);color:#fff;box-shadow:var(--glow)}
+.btn-primario:hover{box-shadow:0 18px 36px -12px rgba(59,110,245,.7)}
+.btn-primario .flecha{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--navy-deep);transition:transform .25s}
+.btn-primario:hover .flecha{transform:translateX(3px)}
+.btn-vidrio{background:rgba(255,255,255,.8);color:var(--navy);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.btn-vidrio:hover{border-color:#C9D5F5}
+.btn-sm{min-height:42px;padding:0 18px;font-size:14.5px}
+.nav .btn-sm .punto{width:8px;height:8px;border-radius:50%;background:#5FE0A1;box-shadow:0 0 0 0 rgba(95,224,161,.6);animation:latido 2.2s infinite}
+
+/* ---------- Héroe: aurora + cuadrícula ---------- */
+.hero{position:relative;overflow:hidden;margin-top:-86px;padding-top:86px}
+.aurora{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.aurora span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.7;animation:deriva 18s ease-in-out infinite alternate}
+.aurora .a1{width:520px;height:520px;top:-140px;left:-120px;background:#BFD0FF}
+.aurora .a2{width:460px;height:460px;top:-60px;right:-60px;background:#D9CFFF;animation-delay:-6s}
+.aurora .a3{width:380px;height:380px;bottom:-120px;left:38%;background:#FFE3A3;opacity:.6;animation-delay:-11s}
+.cuadricula{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(18,50,90,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(18,50,90,.07) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 60% 40%,#000 25%,transparent 75%);mask-image:radial-gradient(ellipse 70% 60% at 60% 40%,#000 25%,transparent 75%)}
+.hero-in{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:clamp(24px,4vw,48px);align-items:center;padding-block:clamp(28px,4vw,52px) 120px}
+.hero-card{display:flex;flex-direction:column;gap:20px;padding:clamp(24px,4vw,44px);border-radius:var(--r-xl);background:var(--glass);border:1px solid var(--glass-line);box-shadow:var(--shadow-lg);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3)}
+.chip-coar{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:var(--gold-soft);border:1px solid rgba(245,184,46,.5);color:var(--navy);font:600 11.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.chip-coar .ico{font-size:15px;color:var(--gold-ink)}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.45rem,5.3vw,4.15rem);line-height:1.02;letter-spacing:-.035em;color:var(--navy)}
+.grad{background:var(--grad-texto);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--muted);font-size:clamp(1.02rem,1.5vw,1.13rem);max-width:52ch}
+.lead strong{color:var(--navy)}
+.mini-temas{display:flex;flex-wrap:wrap;gap:8px}
+.mini-tema{display:inline-flex;align-items:center;gap:7px;padding:7px 12px 7px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.7);color:var(--navy);font:700 13.5px var(--f-body);cursor:pointer;transition:transform .2s cubic-bezier(.22,1,.36,1),border-color .2s,box-shadow .2s}
+.mini-tema .ico{font-size:16px;color:var(--c)}
+.mini-tema:hover{transform:translateY(-2px);border-color:var(--c);box-shadow:0 10px 18px -12px var(--c)}
+.hero-acciones{display:flex;flex-wrap:wrap;gap:12px}
+.hero-datos{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0;padding:14px 0 0;border-top:1px dashed var(--line);list-style:none;font:500 12.5px var(--f-mono);color:var(--muted)}
+.hero-datos b{color:var(--navy);font-weight:600}
+
+/* Escenario del faro */
+.escena{--s:min(470px,88vw);position:relative;width:var(--s);height:var(--s);justify-self:center}
+.brillo{position:absolute;inset:16%;border-radius:50%;background:radial-gradient(circle,rgba(255,209,92,.55) 0%,rgba(139,124,246,.18) 45%,rgba(59,110,245,0) 70%);animation:brillo 3.4s ease-in-out infinite}
+.onda{position:absolute;inset:12%;border-radius:50%;border:1.5px solid rgba(59,110,245,.3);animation:onda 3.6s ease-out infinite}
+.onda.o2{border-color:rgba(139,124,246,.4);animation-delay:1.8s}
+.pista{position:absolute;inset:calc(50% - var(--s) * .43);border-radius:50%;border:1.5px solid rgba(59,110,245,.2);box-shadow:inset 0 0 40px rgba(59,110,245,.06)}
+.pista::after{content:"";position:absolute;top:-5px;left:50%;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--blue);box-shadow:0 0 12px var(--blue)}
+.pista-giro{position:absolute;inset:0;animation:girar 9s linear infinite}
+.orbita{position:absolute;inset:0;animation:girar 36s linear infinite}
+.sat{position:absolute;left:50%;top:50%;transform:rotate(var(--a)) translateY(calc(var(--s) * -.43)) rotate(calc(-1 * var(--a)))}
+.sat-in{position:relative;display:grid;place-items:center;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:18px;border:1px solid var(--glass-line);background:rgba(255,255,255,.85);color:var(--c);box-shadow:var(--shadow);cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);animation:girar 36s linear infinite reverse;transition:box-shadow .25s}
+.sat-in::before{content:"";position:absolute;inset:6px;border-radius:12px;background:var(--tinte);transition:transform .25s cubic-bezier(.22,1,.36,1)}
+.sat-in .ico{position:relative;font-size:25px;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.sat-in:hover,.sat-in:focus-visible{box-shadow:0 16px 30px -14px var(--c)}
+.sat-in:hover::before,.sat-in:focus-visible::before{transform:scale(1.1)}
+.sat-in:hover .ico,.sat-in:focus-visible .ico{transform:scale(1.12) rotate(-8deg)}
+.sat-lbl{position:absolute;top:calc(100% + 8px);left:50%;transform:translate(-50%,4px);white-space:nowrap;padding:5px 10px;border-radius:999px;background:var(--navy);color:#fff;font:700 12px var(--f-body);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.sat-in:hover .sat-lbl,.sat-in:focus-visible .sat-lbl{opacity:1;transform:translate(-50%,0)}
+.escena:hover .orbita,.escena:hover .sat-in,.escena:focus-within .orbita,.escena:focus-within .sat-in{animation-play-state:paused}
+.mascota{position:absolute;inset:15% 17% 13%;display:grid;place-items:center;pointer-events:none}
+.faro{width:100%;height:auto;overflow:visible;animation:flotar 6s ease-in-out infinite;filter:drop-shadow(0 24px 26px rgba(16,27,46,.25))}
+.faro .f-haz{transform-origin:130px 64px;animation:haz 3.4s ease-in-out infinite}
+.faro .f-halo{transform-box:fill-box;transform-origin:center;animation:halo 3.4s ease-in-out infinite}
+.faro .f-luz{animation:luz 2.4s ease-in-out infinite}
+.faro .f-visor{animation:luz 2.4s ease-in-out infinite}
+.faro .f-ola1{animation:ola 3s linear infinite}
+.faro .f-ola2{animation:ola 4.2s linear infinite reverse}
+.faro .f-destello{transform-box:fill-box;transform-origin:center;animation:destello 2.8s ease-in-out infinite}
+.faro .f-destello.d2{animation-delay:-1s}
+.faro .f-destello.d3{animation-delay:-1.9s}
+.bocadillo{position:absolute;left:0;top:8%;z-index:3;display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;border:1px solid var(--glass-line);background:rgba(255,255,255,.88);color:var(--navy);font:700 14px var(--f-body);box-shadow:var(--shadow);cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:border-color .2s}
+.boc-dot{width:8px;height:8px;border-radius:50%;background:#2BC37E;box-shadow:0 0 0 0 rgba(43,195,126,.5);animation:latidoVerde 2s infinite}
+.bocadillo:hover{border-color:var(--blue)}
+.bocadillo small{display:flex;align-items:center;gap:6px;font:500 11px var(--f-mono);color:var(--muted)}
+.bocadillo small i{display:inline-flex;gap:3px}
+.bocadillo small i b{width:4px;height:4px;border-radius:50%;background:var(--blue);animation:salto 1s infinite ease-in-out}
+.bocadillo small i b:nth-child(2){animation-delay:.15s}
+.bocadillo small i b:nth-child(3){animation-delay:.3s}
+
+/* ---------- Avisos de TechWorld: lista siempre visible ---------- */
+.canal{position:relative;z-index:4;margin-top:-58px}
+.canal-card{padding:4px 18px 4px;border-radius:var(--r-xl);background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.canal-cab{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.canal-ico{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--grad);color:var(--gold-lamp);box-shadow:var(--glow)}
+.canal-ico .ico{font-size:18px}
+.canal-nom{margin:0;font:700 16px var(--f-display);letter-spacing:-.01em;color:var(--navy)}
+.canal-sub{font:500 12px var(--f-mono);color:var(--muted)}
+.notas{margin:0;padding:0;list-style:none}
+.nota{display:flex;align-items:center;gap:12px;padding:12px 0;font-size:14.5px;line-height:1.45}
+.nota+.nota{border-top:1px solid var(--line)}
+.nota p{flex:1;min-width:0}
+.nota time{flex:none;font:500 11.5px var(--f-mono);color:var(--muted)}
+.etq{flex:none;display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;background:var(--t);color:var(--c);font:600 10.5px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.etq .ico{font-size:12px}
+
+/* ---------- Temas ---------- */
+.temas{padding-block:clamp(76px,9vw,112px) 0}
+.temas-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.tema{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:20px 18px 18px;border-radius:var(--r-lg);border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-sm);text-align:left;cursor:pointer;transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s,border-color .25s}
+.tema:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.tema[aria-selected="true"]{border-color:var(--c);box-shadow:0 0 0 3px var(--t),0 20px 36px -20px var(--c)}
+.tema-ico{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:var(--tinte);color:var(--c);transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.tema-ico .ico{font-size:26px}
+.tema:hover .tema-ico{transform:rotate(-8deg) scale(1.06)}
+.tema-nom{display:block;font-family:var(--f-display);font-weight:700;font-size:1.13rem;letter-spacing:-.02em;line-height:1.15;color:var(--navy)}
+.tema-txt{display:block;font-size:14px;color:var(--muted);line-height:1.4}
+.tema .check{position:absolute;top:14px;right:14px;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--c);color:#fff;transform:scale(0);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.tema .check .ico{font-size:14px}
+.tema[aria-selected="true"] .check{transform:scale(1)}
+.detalle{margin-top:18px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(20px,4vw,48px);padding:clamp(22px,3.4vw,36px);border-radius:var(--r-xl);background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.detalle::before{content:"";position:absolute;top:-90px;right:-90px;width:280px;height:280px;border-radius:50%;background:var(--t);filter:blur(10px);opacity:.8}
+.detalle > *{position:relative}
+.detalle.entra{animation:entra .4s cubic-bezier(.22,1,.36,1)}
+.det-cab{display:flex;flex-direction:column;gap:14px}
+.det-tit{display:flex;align-items:center;gap:14px}
+.det-tit .tema-ico{width:60px;height:60px;border-radius:18px}
+.det-tit .tema-ico .ico{font-size:30px}
+.det-tit h3{font-family:var(--f-display);font-weight:800;font-size:clamp(1.55rem,2.8vw,2rem);letter-spacing:-.03em;color:var(--navy);line-height:1.05}
+.det-tit .lema{font:600 11.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--c);margin-bottom:4px}
+.det-cab > p{color:var(--muted);font-size:1.02rem}
+.det-botones{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.btn-tema{background:var(--c);color:#fff;box-shadow:0 12px 22px -12px var(--c)}
+.btn-link{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 16px;border-radius:999px;background:#fff;color:var(--navy);border:1px solid var(--line);font:700 14.5px var(--f-body);text-decoration:none;transition:border-color .2s,transform .2s cubic-bezier(.22,1,.36,1)}
+.btn-link .ico{font-size:15px;color:var(--c)}
+.btn-link:hover{border-color:var(--c);transform:translateY(-2px)}
+.det-lista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:0;list-style:none;align-content:start}
+.det-lista li{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--bg);border:1px solid transparent;font-weight:600;font-size:14.5px;line-height:1.4;transition:background .2s,border-color .2s,transform .2s}
+.det-lista li:hover{background:#fff;border-color:var(--t);transform:translateX(3px)}
+.det-lista li::before{content:"";flex:none;width:8px;height:8px;margin-top:6px;border-radius:3px;background:var(--c);transform:rotate(45deg)}
+
+/* ---------- Chat + NotiCOAR ---------- */
+.conversa{padding-block:clamp(76px,9vw,112px) 0}
+.duo{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:22px;height:660px;height:clamp(580px,80vh,700px)}
+.chat,.gaceta{display:flex;flex-direction:column;min-height:0;overflow:hidden;border-radius:var(--r-xl);background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-lg)}
+.chat-cab{position:relative;display:flex;align-items:center;gap:12px;padding:14px 16px 14px 18px;background:var(--grad);color:#fff;overflow:hidden}
+.chat-cab::after{content:"";position:absolute;right:-60px;top:-80px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(139,124,246,.55),rgba(139,124,246,0) 70%);pointer-events:none}
+.av{flex:none;position:relative;z-index:1;display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3)}
+.av svg{width:34px;height:34px}
+.chat-id{flex:1;min-width:0;position:relative;z-index:1}
+.chat-nom{font-family:var(--f-display);font-weight:700;font-size:17px;letter-spacing:-.01em;line-height:1.15}
+.chat-est{display:flex;align-items:center;gap:6px;font:500 12px var(--f-mono);color:#C9D8F6}
+.chat-est i{width:8px;height:8px;border-radius:50%;background:#5FE0A1;box-shadow:0 0 0 3px rgba(95,224,161,.25)}
+.btn-reini{position:relative;z-index:1;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font:600 13px var(--f-body);cursor:pointer;transition:background .2s}
+.btn-reini:hover{background:rgba(255,255,255,.2)}
+.btn-reini .ico{font-size:15px}
+.chips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:10px 12px;padding:4px;border-radius:12px;background:linear-gradient(90deg,#E8EEFF 0%,#EEEBFF 55%,#F3ECFF 100%);border:1px solid #E1E4F7}
+.chip{min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 6px;border:0;border-radius:9px;background:transparent;color:var(--navy);font:600 12.5px var(--f-body);cursor:pointer;white-space:nowrap;transition:background .2s,box-shadow .2s}
+.chip span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.chip .ico{font-size:14px;color:var(--c)}
+.chip:hover{background:#fff;box-shadow:0 4px 12px -6px rgba(16,27,46,.3)}
+.msgs{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:18px 16px;background:linear-gradient(180deg,#F9FAFE 0%,#F2F5FB 100%)}
+.fila{display:flex;align-items:flex-end;gap:8px}
+.fila.user{justify-content:flex-end}
+.mini-av{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:11px;background:var(--grad);box-shadow:var(--shadow-sm)}
+.mini-av svg{width:25px;height:25px}
+.msg{max-width:min(560px,86%);padding:12px 15px;font-size:15.5px;line-height:1.5;overflow-wrap:anywhere}
+.msg.bot{background:#fff;border:1px solid var(--line);border-radius:18px 18px 18px 6px;box-shadow:0 8px 18px -14px rgba(16,27,46,.35)}
+.msg.user{background:var(--grad);color:#fff;border-radius:18px 18px 6px 18px;font-weight:600;box-shadow:var(--glow)}
+.fila.entra{animation:pop .35s cubic-bezier(.22,1,.36,1)}
+.msg p+p,.msg p+ul,.msg p+ol,.msg ul+p,.msg ol+p{margin-top:.5em}
+.msg ul,.msg ol{margin:.35em 0 0;padding-left:1.2em}
+.msg li+li{margin-top:.2em}
+.msg li::marker{color:var(--blue)}
+.msg strong{color:var(--navy)}
+.msg.user strong{color:#fff}
+.typing{display:flex;gap:5px;align-items:center;padding:14px 16px}
+.typing span{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:salto 1s infinite ease-in-out}
+.typing span:nth-child(2){animation-delay:.15s;background:var(--lila)}
+.typing span:nth-child(3){animation-delay:.3s;background:var(--gold)}
+.seguir{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pill{display:inline-flex;align-items:center;min-height:36px;padding:7px 14px;border-radius:999px;border:1px solid #D3DEFB;background:var(--blue-soft);color:var(--navy);font:700 13.5px/1.2 var(--f-body);cursor:pointer;text-align:left;transition:transform .2s cubic-bezier(.22,1,.36,1),background .2s,border-color .2s}
+.pill:hover{background:#fff;border-color:var(--blue);transform:translateY(-2px)}
+.res{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.res-link{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:var(--bg);border:1px solid var(--line);text-decoration:none;color:var(--ink);transition:border-color .2s,transform .2s}
+.res-link:hover{border-color:var(--blue);transform:translateX(3px)}
+.res-ico{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--gold-soft);color:var(--gold-ink)}
+.res-ico .ico{font-size:16px}
+.res-t{display:block;font-weight:800;font-size:14.5px;color:var(--navy)}
+.res-d{display:block;font:500 11.5px var(--f-mono);color:var(--muted)}
+.composer{display:flex;gap:10px;padding:12px 14px 14px;border-top:1px solid var(--line);background:#fff}
+.composer input{flex:1;min-width:0;height:50px;padding:0 20px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:600 16px var(--f-body);transition:border-color .2s,background .2s,box-shadow .2s}
+.composer input::placeholder{color:#8692A8;font-weight:500}
+.composer input:focus{outline:0;border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px var(--blue-soft)}
+.enviar{flex:none;display:grid;place-items:center;width:50px;height:50px;border-radius:50%;border:0;background:var(--grad);color:#fff;cursor:pointer;box-shadow:var(--glow);transition:transform .25s cubic-bezier(.22,1,.36,1)}
+.enviar .ico{font-size:20px}
+.enviar:hover{transform:rotate(-12deg) scale(1.06)}
+
+/* NotiCOAR: estructura de periódico, mismo estilo del resto */
+.gaceta.flash{animation:flash 1.6s ease-out}
+.gac-cab{margin:0 18px;padding:16px 0 12px;text-align:center;border-bottom:4px double var(--navy)}
+.gac-pre{display:flex;justify-content:space-between;gap:8px;padding-bottom:7px;border-bottom:1px solid var(--navy);font:600 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.gac-vivo{display:inline-flex;align-items:center;gap:6px;color:var(--c-coral)}
+.gac-vivo i{width:7px;height:7px;border-radius:50%;background:var(--c-coral);animation:latidoRojo 1.8s infinite}
+.gac-cab h2{display:inline-flex;align-items:center;gap:10px;margin-top:12px;font-family:var(--f-display);font-weight:800;font-size:clamp(1.7rem,2.6vw,2.1rem);line-height:1;letter-spacing:-.04em;color:var(--navy)}
+.gac-cab h2 svg{width:30px;height:30px;color:var(--blue)}
+.gac-lema{font-weight:600;font-size:13px;color:var(--muted);margin-top:6px}
+.gac-fecha{margin-top:9px;padding-top:7px;border-top:1px solid var(--navy);font:600 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.gac-cuerpo{flex:1;min-height:0;overflow-y:auto;padding:4px 18px 8px;scrollbar-width:thin}
+.art{padding:16px 0;border-bottom:1px solid var(--line)}
+.art:last-child{border-bottom:0}
+.art-etqs{display:flex;flex-wrap:wrap;gap:6px}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;background:var(--t);color:var(--c);font:600 10px var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+.tag .ico{font-size:12px}
+.tag.portada{background:var(--grad);color:#fff}
+.tag.portada .ico{color:var(--gold-lamp)}
+.tag.futuro{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c)}
+.art h3{font-family:var(--f-display);font-weight:700;font-size:16.5px;letter-spacing:-.02em;line-height:1.25;color:var(--navy);margin-top:9px}
+.art time{display:block;margin-top:5px;font:500 10.5px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.art p{margin-top:6px;font-size:14px;line-height:1.55;color:var(--muted)}
+.art.principal{margin-top:4px;padding:16px;border-radius:18px;background:linear-gradient(160deg,#F3F6FF 0%,#FBF8FF 100%);border:1px solid #E3E9FB;border-bottom:1px solid #E3E9FB}
+.art.principal h3{font-weight:800;font-size:clamp(1.25rem,1.9vw,1.45rem);line-height:1.15}
+.art.principal p{color:var(--ink);font-size:14.5px}
+.art.principal p::first-letter{float:left;font-family:var(--f-display);font-weight:800;font-size:2.9em;line-height:.85;margin:.06em .12em 0 0;color:var(--blue)}
+.art-link{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font:800 13.5px var(--f-body);color:var(--navy);text-decoration:none;border-bottom:2px solid var(--gold)}
+.art-link .ico{font-size:14px;transition:transform .2s}
+.art-link:hover .ico{transform:translateX(3px)}
+.gac-pie{margin:0 18px;padding:10px 0 14px;border-top:4px double var(--navy);text-align:center;font:600 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.gac-pie button{border:0;background:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--blue);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;cursor:pointer}
+
+/* ---------- Herramienta APA ---------- */
+.apa{margin-top:12px;padding:12px;border-radius:16px;background:var(--bg);border:1px solid var(--line)}
+.apa-tabs{display:inline-flex;padding:4px;border-radius:999px;background:#fff;margin-bottom:10px;border:1px solid var(--line)}
+.apa-tabs button{height:30px;padding:0 13px;border:0;border-radius:999px;background:transparent;color:var(--muted);font:700 13px var(--f-body);cursor:pointer;transition:background .2s,color .2s}
+.apa-tabs button[aria-pressed="true"]{background:var(--grad);color:#fff}
+.apa-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.apa-grid label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;font-weight:700;color:var(--muted);min-width:0}
+.apa-grid .full{grid-column:1/-1}
+.apa-grid input{height:38px;width:100%;min-width:0;padding:0 11px;border-radius:11px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font:600 15px var(--f-body)}
+.apa-grid input:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.apa-out{margin-top:10px;padding:10px 12px 10px calc(12px + 1.6em);text-indent:-1.6em;border-radius:12px;background:var(--gold-soft);font-size:14.5px;line-height:1.5;overflow-wrap:anywhere}
+.apa-out.vacio{color:var(--muted)}
+.apa-pie{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:10px;font-size:12.5px;color:var(--muted)}
+
+/* ---------- Califica ---------- */
+.califica{padding-block:clamp(76px,9vw,112px)}
+.cal-box{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,4vw,56px);padding:clamp(22px,4vw,44px);border-radius:var(--r-xl);background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-lg)}
+.cal-box::before{content:"";position:absolute;left:-120px;bottom:-140px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(139,124,246,.18),rgba(139,124,246,0) 70%);pointer-events:none}
+.cal-box > *{position:relative}
+.cal-intro{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.cal-intro h2{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,4vw,2.7rem);line-height:1.05;letter-spacing:-.03em;color:var(--navy)}
+.cal-intro > p{color:var(--muted);font-size:1.05rem}
+.anon{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:#E2F5EC;color:var(--ok);font-weight:700;font-size:14px}
+.anon .ico{font-size:17px}
+.reaccion{display:flex;align-items:center;gap:14px;margin-top:6px}
+.reaccion-faro{--brillo:.35;position:relative;isolation:isolate;display:grid;place-items:center;width:80px;height:80px;border-radius:24px;background:var(--grad);box-shadow:var(--glow)}
+.reaccion-faro::before{content:"";position:absolute;inset:-6px;border-radius:30px;background:radial-gradient(circle,rgba(255,209,92,.75),rgba(255,209,92,0) 70%);transform:scale(calc(.6 + var(--brillo)));opacity:var(--brillo);transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .4s;z-index:-1}
+.reaccion-faro svg{width:58px;height:58px;transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.reaccion-faro.feliz svg{transform:rotate(-6deg) scale(1.06)}
+.reaccion-txt{font-family:var(--f-display);font-weight:700;font-size:1.25rem;letter-spacing:-.02em;color:var(--navy)}
+.cal-form{display:flex;flex-direction:column;gap:18px}
+.cal-form fieldset{border:0;margin:0;padding:0;min-width:0}
+.cal-form legend,.cal-form .lbl{display:block;padding:0;margin-bottom:10px;font-weight:800;font-size:15px;color:var(--navy)}
+.opc{font-weight:600;color:var(--muted)}
+.escala{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:7px}
+.escala label{position:relative;cursor:pointer}
+.escala input{position:absolute;inset:0;margin:0;opacity:0;cursor:pointer}
+.escala span{display:grid;place-items:center;height:48px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);font:700 16px var(--f-display);color:var(--navy);pointer-events:none;transition:transform .2s cubic-bezier(.22,1,.36,1),background .2s,border-color .2s,box-shadow .2s}
+.escala label:hover span{transform:translateY(-3px);border-color:var(--blue)}
+.escala label.on span{background:var(--blue-soft);border-color:#C9D6FB}
+.escala input:checked+span{background:var(--grad);border-color:transparent;color:#fff;box-shadow:var(--glow);transform:translateY(-3px) scale(1.06)}
+.escala input:focus-visible+span{outline:3px solid var(--blue);outline-offset:2px}
+.escala-ext{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font:500 11.5px var(--f-mono);color:var(--muted)}
+.cal-form textarea,.cal-form input[type="text"]{width:100%;border-radius:16px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:600 16px/1.5 var(--f-body);padding:12px 16px;transition:border-color .2s,box-shadow .2s,background .2s}
+.cal-form textarea{min-height:110px;resize:vertical}
+.cal-form textarea:focus,.cal-form input[type="text"]:focus{outline:0;border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px var(--blue-soft)}
+.cal-fin{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px}
+.estado{font-weight:800;font-size:14.5px}
+.estado.bien{color:var(--ok)}
+.estado.falta{color:var(--error)}
+.prueba{font:500 12px var(--f-mono);color:var(--muted);padding-top:12px;border-top:1px dashed var(--line)}
+
+/* ---------- Pie ---------- */
+.pie{position:relative;background:var(--navy-deep);color:#B9C8E2;margin-top:40px;overflow:hidden}
+.pie::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
+.pie::after{content:"";position:absolute;right:-120px;top:-160px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(59,110,245,.35),rgba(59,110,245,0) 70%);pointer-events:none}
+.pie-in{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.3fr) auto;gap:24px 48px;padding-block:48px 28px}
+.pie .marca{color:#fff}
+.pie-tag{margin-top:10px;max-width:46ch;font-size:15px}
+.pie-links{display:flex;flex-direction:column;gap:10px}
+.pie-links a{display:inline-flex;align-items:center;gap:8px;color:#fff;font-weight:700;text-decoration:none;transition:color .2s,transform .2s}
+.pie-links a .ico{color:var(--gold-lamp)}
+.pie-links a:hover{color:var(--gold-lamp);transform:translateX(3px)}
+.pie-copy{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);font:500 12.5px var(--f-mono)}
+.pie-copy .ico{color:#FF8FA8}
+
+/* ---------- Animaciones ---------- */
+@keyframes girar{to{transform:rotate(360deg)}}
+@keyframes deriva{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.12)}}
+@keyframes flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes haz{0%,100%{opacity:.35;transform:scaleX(.82)}50%{opacity:1;transform:scaleX(1.08)}}
+@keyframes halo{0%,100%{opacity:.6;transform:scale(.9)}50%{opacity:1;transform:scale(1.12)}}
+@keyframes luz{0%,100%{opacity:.85}50%{opacity:1}}
+@keyframes parpadeo{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.15)}}
+@keyframes ola{to{transform:translateX(-40px)}}
+@keyframes destello{0%,100%{opacity:.25;transform:scale(.6) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(45deg)}}
+@keyframes brillo{0%,100%{opacity:.6;transform:scale(.92)}50%{opacity:1;transform:scale(1.1)}}
+@keyframes onda{0%{opacity:.7;transform:scale(.85)}100%{opacity:0;transform:scale(1.35)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes latido{0%{box-shadow:0 0 0 0 rgba(245,184,46,.6)}70%{box-shadow:0 0 0 9px rgba(245,184,46,0)}100%{box-shadow:0 0 0 0 rgba(245,184,46,0)}}
+@keyframes latidoVerde{0%{box-shadow:0 0 0 0 rgba(43,195,126,.5)}70%{box-shadow:0 0 0 7px rgba(43,195,126,0)}100%{box-shadow:0 0 0 0 rgba(43,195,126,0)}}
+@keyframes latidoRojo{0%{box-shadow:0 0 0 0 rgba(201,74,51,.5)}70%{box-shadow:0 0 0 7px rgba(201,74,51,0)}100%{box-shadow:0 0 0 0 rgba(201,74,51,0)}}
+@keyframes megafono{0%,100%{transform:rotate(0)}10%{transform:rotate(-12deg)}20%{transform:rotate(8deg)}30%{transform:rotate(0)}}
+@keyframes entra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes salto{0%,80%,100%{opacity:.4;transform:none}40%{opacity:1;transform:translateY(-4px)}}
+@keyframes flash{0%,45%{box-shadow:0 0 0 4px var(--blue),var(--shadow-lg)}100%{box-shadow:0 0 0 0 rgba(59,110,245,0),var(--shadow-lg)}}
+
+/* ---------- Tablet y celular ---------- */
+@media (max-width:1060px){
+  .temas-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 4px 14px;margin-inline:-4px;scrollbar-width:thin}
+  .tema{flex:none;width:220px;scroll-snap-align:start}
+}
+@media (max-width:960px){
+  .hero-in{grid-template-columns:minmax(0,1fr);padding-bottom:110px}
+  .escena{--s:min(400px,86vw);order:-1}
+  .duo{grid-template-columns:minmax(0,1fr);height:auto}
+  .chat{height:640px;height:min(80dvh,660px);min-height:520px}
+  .gaceta{max-height:640px}
+  .detalle,.cal-box{grid-template-columns:minmax(0,1fr)}
+  .pie-in{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:860px){
+  .nav-links{display:none}
+}
+@media (max-width:640px){
+  .canal-card{padding-inline:14px}
+  .nota{flex-wrap:wrap;gap:6px 10px}
+  .nota p{flex-basis:100%;order:3}
+}
+@media (max-width:560px){
+  .marca{font-size:19px}
+  .sat-in{width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:15px}
+  .sat-in::before{border-radius:11px;inset:5px}
+  .sat-in .ico{font-size:21px}
+  .bocadillo{top:2%;font-size:14px}
+  .det-lista{grid-template-columns:minmax(0,1fr)}
+  .escala{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .msg{max-width:88%}
+  .chips{margin:8px 10px}
+  .chip{flex-direction:column;justify-content:center;gap:3px;height:48px;font-size:10.5px}
+  .chip .ico{font-size:16px}
+  .mini-av{display:none}
+  .gac-cab,.gac-pie{margin-inline:14px}
+  .gac-cuerpo{padding-inline:14px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <div class="nav-in">
+      <a class="marca" href="#inicio" aria-label="GuideLight, ir al inicio"><span data-mini-faro></span><span>Guide<b>Light</b></span></a>
+      <nav class="nav-links" aria-label="Secciones">
+        <a href="#temas">Temas</a>
+        <a href="#chat">Chat</a>
+        <a href="#gaceta">NotiCOAR</a>
+        <a href="#canal">Canal TechWorld</a>
+        <a href="#califica">Califica</a>
+      </nav>
+      <a class="btn btn-primario btn-sm" href="#chat"><span class="punto" aria-hidden="true"></span>Chatear</a>
+    </div>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero" aria-labelledby="hero-titulo">
+    <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+    <div class="cuadricula" aria-hidden="true"></div>
+
+    <div class="wrap hero-in">
+      <div class="hero-card">
+        <span class="chip-coar"><span data-ico="brujula"></span>COAR Lima Provincias · Diploma IB</span>
+        <h1 id="hero-titulo">El faro que guía tu <span class="grad">alto rendimiento</span></h1>
+        <p class="lead"><strong>Pregúntale lo que quieras.</strong> GuideLight te responde al instante sobre clases y exámenes IB, hábitos de estudio, la vida en el COAR, los clubes y las oportunidades para tu futuro.</p>
+        <div class="mini-temas" id="mini-temas" aria-label="Los 5 temas"></div>
+        <div class="hero-acciones">
+          <a class="btn btn-primario" href="#chat">Empieza a conversar <span class="flecha"><span data-ico="flecha"></span></span></a>
+          <a class="btn btn-vidrio" href="#temas">Ver los 5 temas</a>
+        </div>
+        <ul class="hero-datos">
+          <li><b>5</b> temas</li>
+          <li><b>24/7</b> disponible</li>
+          <li><b>APA</b> citas en el chat</li>
+        </ul>
+      </div>
+
+      <div class="escena" id="escena">
+        <div class="brillo" aria-hidden="true"></div>
+        <div class="onda" aria-hidden="true"></div>
+        <div class="onda o2" aria-hidden="true"></div>
+        <div class="pista-giro" aria-hidden="true"><div class="pista"></div></div>
+        <div class="mascota">
+          <svg class="faro" viewBox="0 0 260 300" role="img" aria-label="Faro-bot de GuideLight, la mascota">
+            <defs>
+              <linearGradient id="hazI" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#FFD15C" stop-opacity=".9"/><stop offset="1" stop-color="#FFD15C" stop-opacity="0"/></linearGradient>
+              <linearGradient id="hazD" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFD15C" stop-opacity=".9"/><stop offset="1" stop-color="#FFD15C" stop-opacity="0"/></linearGradient>
+              <radialGradient id="halo"><stop offset="0" stop-color="#FFF1C2"/><stop offset=".55" stop-color="#FFD15C" stop-opacity=".4"/><stop offset="1" stop-color="#FFD15C" stop-opacity="0"/></radialGradient>
+              <linearGradient id="torre" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#E6ECF6"/><stop offset="1" stop-color="#B9C6DC"/></linearGradient>
+              <linearGradient id="franja" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4B7BF7"/><stop offset=".55" stop-color="#2A54B8"/><stop offset="1" stop-color="#12325A"/></linearGradient>
+              <linearGradient id="cupula" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B6EF5"/><stop offset="1" stop-color="#12325A"/></linearGradient>
+              <linearGradient id="roca" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D3DDEE"/><stop offset="1" stop-color="#A7B7D2"/></linearGradient>
+              <clipPath id="cuerpo"><path d="M108 94 H152 L166 238 H94 Z"/></clipPath>
+            </defs>
+            <g class="f-haz"><path d="M116 64 L2 26 L2 102 Z" fill="url(#hazI)"/><path d="M144 64 L258 26 L258 102 Z" fill="url(#hazD)"/></g>
+            <circle class="f-halo" cx="130" cy="64" r="50" fill="url(#halo)"/>
+            <path d="M130 10 v13" stroke="#12325A" stroke-width="3.5" stroke-linecap="round"/>
+            <circle cx="130" cy="10" r="5.5" fill="#F5B82E"/>
+            <path d="M106 46 Q106 22 130 20 Q154 22 154 46 Z" fill="url(#cupula)"/>
+            <rect x="110" y="44" width="40" height="36" rx="9" fill="#12325A"/>
+            <rect class="f-luz" x="116" y="50" width="28" height="24" rx="6" fill="#FFD15C"/>
+            <rect x="120" y="54" width="4.5" height="12" rx="2.2" fill="#fff" opacity=".8"/>
+            <rect x="98" y="80" width="64" height="12" rx="6" fill="#12325A"/>
+            <path d="M108 92 H152 L166 238 H94 Z" fill="url(#torre)"/>
+            <g clip-path="url(#cuerpo)"><rect x="80" y="152" width="100" height="22" fill="url(#franja)"/><rect x="80" y="200" width="100" height="22" fill="url(#franja)"/></g>
+            <rect x="110" y="106" width="40" height="22" rx="11" fill="#12325A"/>
+            <rect class="f-visor" x="116" y="114.5" width="28" height="5" rx="2.5" fill="#8FE3FF"/>
+            <circle cx="130" cy="187" r="6" fill="#FFD15C" stroke="#12325A" stroke-width="2.6"/>
+            <path d="M120 238 V224 a10 10 0 0 1 20 0 V238 Z" fill="#12325A"/>
+            <rect x="84" y="235" width="92" height="12" rx="6" fill="#12325A"/>
+            <path d="M44 272 C62 248 92 244 108 249 H152 C168 244 198 248 216 272 Z" fill="url(#roca)"/>
+            <g class="f-ola1"><path d="M-40 276 q10 -7 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#6F9BFF" stroke-width="5" stroke-linecap="round"/></g>
+            <g class="f-ola2"><path d="M-40 290 q10 -7 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#B3A6FF" stroke-width="4" stroke-linecap="round"/></g>
+          </svg>
+        </div>
+        <div class="orbita" id="orbita"></div>
+        <button class="bocadillo" type="button" id="bocadillo"><span class="boc-dot" aria-hidden="true"></span>Pregúntame lo que quieras</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap canal" id="canal" aria-labelledby="canal-titulo">
+    <div class="canal-card">
+      <div class="canal-cab">
+        <span class="canal-ico" aria-hidden="true"><span data-ico="megafono"></span></span>
+        <h2 class="canal-nom" id="canal-titulo">TechWorld</h2>
+        <span class="canal-sub">Avisos del equipo que creó GuideLight</span>
+      </div>
+      <ul class="notas" id="notas"></ul>
+    </div>
+  </section>
+
+  <section class="wrap temas" id="temas" aria-labelledby="temas-titulo">
+    <div class="sec-head">
+      <span class="kicker"><i aria-hidden="true"></i>¿En qué te puedo ayudar?</span>
+      <h2 id="temas-titulo">Cinco temas, <span>un solo faro</span></h2>
+      <p>Toca un tema para ver todo lo que GuideLight sabe sobre él.</p>
+    </div>
+    <div class="temas-grid" id="temas-grid" role="tablist" aria-label="Temas de GuideLight"></div>
+    <div class="detalle" id="detalle" role="tabpanel" aria-live="polite"></div>
+  </section>
+
+  <section class="wrap conversa" id="chat" aria-labelledby="chat-titulo">
+    <div class="sec-head">
+      <span class="kicker"><i aria-hidden="true"></i>Pregúntale al faro</span>
+      <h2 id="chat-titulo">Conversa con <span>GuideLight</span></h2>
+      <p>Escríbele o toca un tema, y entérate de lo último del colegio en NotiCOAR.</p>
+    </div>
+    <div class="duo">
+      <div class="chat" role="region" aria-label="Chat con GuideLight">
+        <div class="chat-cab">
+          <span class="av" data-mini-faro aria-hidden="true"></span>
+          <div class="chat-id">
+            <p class="chat-nom">GuideLight</p>
+            <p class="chat-est"><i aria-hidden="true"></i>en línea · COAR LP</p>
+          </div>
+          <button class="btn-reini" type="button" id="reiniciar" title="Empezar una conversación nueva"><span data-ico="reiniciar"></span>Reiniciar</button>
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Temas rápidos"></div>
+        <div class="msgs" id="msgs" role="log" aria-live="polite" aria-label="Mensajes"></div>
+        <form class="composer" id="composer" autocomplete="off">
+          <label class="sr-only" for="chat-input">Escribe tu pregunta</label>
+          <input id="chat-input" type="text" maxlength="300" enterkeyhint="send" placeholder="Pregúntame algo, ej. ¿qué es el Interhouse?">
+          <button class="enviar" id="enviar" type="button" aria-label="Enviar pregunta"><span data-ico="enviar"></span></button>
+        </form>
+      </div>
+
+      <aside class="gaceta" id="gaceta" aria-labelledby="gaceta-titulo">
+        <header class="gac-cab">
+          <p class="gac-pre"><span>Edición digital</span><span id="gac-act">COAR Lima Provincias</span></p>
+          <h2 id="gaceta-titulo"><span data-ico="periodico"></span>NotiCOAR</h2>
+          <p class="gac-lema">Noticias del COAR Lima Provincias</p>
+          <p class="gac-fecha" id="gac-fecha">COAR Lima Provincias</p>
+        </header>
+        <div class="gac-cuerpo" id="gac-cuerpo"></div>
+        <footer class="gac-pie">¿Sugerencias? <button type="button" id="gac-sugerir">Escríbelas en el chat</button></footer>
+      </aside>
+    </div>
+  </section>
+
+  <section class="wrap califica" id="califica" aria-labelledby="cal-titulo">
+    <div class="cal-box">
+      <div class="cal-intro">
+        <span class="kicker"><i aria-hidden="true"></i>Tu opinión</span>
+        <h2 id="cal-titulo">Califica GuideLight</h2>
+        <p>Del 1 al 10, ¿qué tan útil te resulta? Déjanos también tus ideas: las leemos todas.</p>
+        <p class="anon"><span data-ico="candado"></span>Es anónimo. El nombre es opcional.</p>
+        <div class="reaccion" aria-live="polite">
+          <span class="reaccion-faro" id="reaccion-faro" data-mini-faro aria-hidden="true"></span>
+          <p class="reaccion-txt" id="reaccion-txt">Elige una nota</p>
+        </div>
+      </div>
+      <form class="cal-form" id="cal-form" novalidate>
+        <fieldset>
+          <legend>¿Cuánto calificas a GuideLight?</legend>
+          <div class="escala" id="escala"></div>
+          <div class="escala-ext" aria-hidden="true"><span>1 = bajo</span><span>10 = excelente</span></div>
+        </fieldset>
+        <div>
+          <label class="lbl" for="cal-texto">Recomendaciones</label>
+          <textarea id="cal-texto" maxlength="1000" placeholder="¿Qué mejorarías o qué tema te gustaría ver?"></textarea>
+        </div>
+        <div>
+          <label class="lbl" for="cal-nombre">Nombre o grado <span class="opc">(opcional)</span></label>
+          <input id="cal-nombre" type="text" maxlength="60" placeholder="Ej.: 5.º grado">
+        </div>
+        <div class="cal-fin">
+          <button class="btn btn-primario" type="submit">Enviar calificación <span class="flecha"><span data-ico="flecha"></span></span></button>
+          <p class="estado" id="cal-estado" aria-live="polite"></p>
+        </div>
+        <p class="prueba" id="cal-prueba" hidden>Modo de prueba: las calificaciones todavía no se guardan en ningún lado.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="wrap pie-in">
+    <div>
+      <a class="marca" href="#inicio"><span data-mini-faro></span><span>Guide<b>Light</b></span></a>
+      <p class="pie-tag">Apoyo académico y desarrollo estudiantil para los coarinos de Lima Provincias.</p>
+    </div>
+    <nav class="pie-links" id="pie-links" aria-label="Enlaces útiles"></nav>
+    <p class="pie-copy">© 2026 GuideLight · Hecho por el equipo TechWorld · COAR Lima Provincias</p>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   GUIDELIGHT · Lo que puedes editar está en las secciones 1 a 5.
+   ===================================================================== */
+
+/* ---------- 1. NOTICOAR (noticias del COAR) ----------
+   Copia un bloque { ... } para agregar una noticia.
+   - fecha:    "AAAA-MM-DD"
+   - etiqueta: Evento, Actualización, Aviso, Información o Próximamente
+   - portada:  true para ponerla como noticia principal (solo una)
+   - enlace:   opcional, { texto:"...", url:"https://..." }            */
+const NOTICIAS = [
+  { fecha:"2026-10-10", etiqueta:"Aviso", portada:true,
+    titulo:"¡Se vienen los exámenes IB!",
+    texto:"La convocatoria de noviembre 2026 del Diploma IB va del viernes 23 de octubre al viernes 13 de noviembre. Revisa el calendario oficial, descansa bien y confía en todo lo que preparaste. ¡Mucho éxito, promo!",
+    enlace:{ texto:"Ver el calendario oficial del IB", url:"https://ibo.org/globalassets/new-structure/programmes/dp/pdfs/november-2026-examination-schedule.pdf" } },
+  { fecha:"2026-10-10", etiqueta:"Próximamente",
+    titulo:"Feria de ciencias con apoyo de CONCYTEC",
+    texto:"Science without Limits prepara una feria para después de los exámenes IB. Dicen que habrá una sorpresa…" },
+  { fecha:"2026-10-10", etiqueta:"Información",
+    titulo:"El periódico mural se renueva cada mes",
+    texto:"El Club de Ciencias actualiza el periódico mural con los concursos del mes. ¡Date una vuelta y anímate a participar!" },
+  { fecha:"2026-09-05", etiqueta:"Evento",
+    titulo:"Juegos Florales Literarios por el X Aniversario",
+    texto:"Concurso de cuento breve, poesía y ensayo inspirados en el X aniversario del COAR Lima Provincias y la diversidad cultural. Inscripciones del 1 al 7 de setiembre en la biblioteca y trabajos hasta el 18 de setiembre. Premiación en la ceremonia central y publicación en un compendio digital." }
+];
+
+/* ---------- 2. CANAL TECHWORLD (avisos del equipo sobre GuideLight) ----------
+   tipo: Nuevo, Actualización, Función, Atajo o Próximamente           */
+const CANAL = [
+  { fecha:"2026-10-10", tipo:"Nuevo", texto:"¡GuideLight se renovó! Nuevo diseño y 5 temas: Faro Académico, Brújula, Puerto COAR, La Tripulación y Nuevos Horizontes." },
+  { fecha:"2026-09-02", tipo:"Actualización", texto:"La OSCEP COAR LP ya es parte de GuideLight: pregúntale por sus secciones, ensayos y audiciones." },
+  { fecha:"2026-08-20", tipo:"Función", texto:"GuideLight arma tus citas y referencias con la guía APA del colegio. Escribe «citar en APA» en el chat." },
+  { fecha:"2026-08-05", tipo:"Atajo", texto:"Ya puedes abrir la Biblioteca Coarina directo desde Faro Académico." }
+];
+
+/* ---------- 3. ENLACES ---------- */
+const ENLACES = {
+  biblioteca:    { titulo:"Biblioteca Coarina", url:"https://sites.google.com/view/biblioteca-virtual-lp/inicio?authuser=0" },
+  cronograma:    { titulo:"Calendario oficial de exámenes IB", url:"https://ibo.org/globalassets/new-structure/programmes/dp/pdfs/november-2026-examination-schedule.pdf" },
+  repositorio:   { titulo:"RevisionDojo", url:"https://www.revisiondojo.com/" },
+  fisica:        { titulo:"Física y Química IB", url:"https://fisicayquimicaonline.blogspot.com/p/fisica-ib-nivel-medio.html" },
+  oportunidades: { titulo:"Oportunidades para coarinos", url:"https://www.coarinos.org/oportunidades" }
+};
+
+/* ---------- 4. LOS 5 TEMAS ---------- */
+const TEMAS = [
+  { id:"academico", nombre:"Faro Académico", chip:"Académico", color:"azul", icono:"libro", lema:"Clases, exámenes y recursos IB",
+    corto:"Horarios, exámenes IB, concursos y RevisionDojo.",
+    resumen:"Todo lo de clases en un solo lugar: horarios de salones, la semana de exámenes y simulacros IB, concursos, trámites y RevisionDojo para practicar.",
+    puntos:["Horarios de salones","Semana de exámenes y simulacros IB","Concursos: bases y convocatorias en el Drive del colegio","Trámites, evaluación y consultas académicas","RevisionDojo: práctica y recursos por asignatura IB","Criterios de evaluación y formatos"],
+    enlaces:["biblioteca","cronograma","repositorio","fisica"] },
+  { id:"consejos", nombre:"Brújula", chip:"Brújula", color:"coral", icono:"brujula", lema:"Hábitos que te orientan",
+    corto:"Prioridades, metas SMART, Pomodoro y bienestar.",
+    resumen:"Para cuando no sabes por dónde empezar: cómo priorizar, poner metas que sí se cumplen y estudiar sin quemarte.",
+    puntos:["Prioridades: máximo 3 al día, urgente vs. importante","Hábitos de estudio con metas SMART","Planificación con bloques Pomodoro","Espacio de estudio, descansos y bienestar"],
+    enlaces:[] },
+  { id:"vida", nombre:"Puerto COAR", chip:"Puerto COAR", color:"turq", icono:"ancla", lema:"La vida en el cole",
+    corto:"Torneos, Interhouse, días festivos y reglamento.",
+    resumen:"Lo que pasa en el COAR fuera del aula: torneos, Interhouse, celebraciones y las normas que todos compartimos.",
+    puntos:["Torneos: juegos de mesa, deportes y bailetón","Interhouse: en qué consiste, objetivos e historia","Días festivos: Madre, Padre, Aniversario y Maestro","Reglamento: convivencia, uniforme y celulares","Residencia, permisos y salidas","Derechos, deberes y canales de atención"],
+    enlaces:[] },
+  { id:"clubes", nombre:"La Tripulación", chip:"Tripulación", color:"lila", icono:"tripulacion", lema:"Clubes y orquesta",
+    corto:"Science without Limits, Beyond Robotics y OSCEP.",
+    resumen:"Los grupos donde puedes sumarte a la tripulación: ciencia, robótica y música.",
+    puntos:["Science without Limits: ponencia de método científico para tercero","Feria después de los exámenes IB con apoyo de CONCYTEC","Periódico mural con los concursos de cada mes","Beyond Robotics: talleres de programación y construcción de robots","Competencias y proyectos de tecnología e ingeniería","OSCEP COAR LP: cuerdas, vientos y percusión"],
+    enlaces:[] },
+  { id:"oportunidades", nombre:"Nuevos Horizontes", chip:"Horizontes", color:"oro", icono:"horizonte", lema:"Tu futuro empieza aquí",
+    corto:"Becas, convocatorias, voluntariados e intercambios.",
+    resumen:"Becas nacionales e internacionales, convocatorias, voluntariados e intercambios para que llegues lejos.",
+    puntos:["Becas nacionales e internacionales","Convocatorias académicas y deportivas","Voluntariados e intercambios","Enlaces oficiales del COAR y aliados"],
+    enlaces:["oportunidades"] }
+];
+
+/* ---------- 5. CALIFICACIONES ----------
+   true = modo de prueba (no guarda nada). Lo conectamos a un Google Form al publicar. */
+const MODO_PRUEBA = true;
+
+/* =====================================================================
+   RESPUESTAS DEL CHAT
+   texto: lo que responde · enlaces: de ENLACES · seguir: botones siguientes
+   ===================================================================== */
+const ETIQUETAS = {
+  academico:"Faro Académico", consejos:"Brújula", vida:"Puerto COAR", clubes:"La Tripulación", oportunidades:"Nuevos Horizontes",
+  cronograma:"Calendario de exámenes IB", horarios:"Horarios de salones", concursos:"Concursos", tramites:"Trámites",
+  repositorio:"RevisionDojo", biblioteca:"Biblioteca Coarina", apa:"Citar en APA", nucleo:"Monografía, TdC y CAS",
+  prioridades:"Mis prioridades", smart:"Metas SMART", pomodoro:"Técnica Pomodoro", espacio:"Mi espacio de estudio",
+  estres:"Siento mucha presión", examenes:"Estudiar para exámenes", semana:"Organizar mi semana",
+  torneos:"Torneos", interhouse:"Interhouse", festivos:"Días festivos", reglamento:"Reglamento interno", residencia:"Residencia y permisos",
+  ciencias:"Science without Limits", robotica:"Beyond Robotics", oscep:"OSCEP COAR LP", postular:"Cómo postular",
+  juegos:"Juegos Florales", gaceta:"Ver NotiCOAR", "#califica":"Ir a Califica", "#temas":"Ver los 5 temas", "#canal":"Ver el Canal TechWorld"
+};
+
+const R = {
+  inicio:{ texto:`<p>¡Hola, coarino! Soy <strong>GuideLight</strong>, tu faro en el COAR Lima Provincias.</p><p>Pregúntame lo que quieras o toca un tema de arriba. Por ejemplo:</p>`,
+    seguir:[{t:"¿Cuándo son los exámenes IB?", id:"cronograma"},{t:"Ayúdame a citar en APA", id:"apa"},{t:"¿Qué es Science without Limits?", id:"ciencias"}] },
+
+  academico:{ texto:`<p>Bienvenido a <strong>Faro Académico</strong>. Te ayudo con horarios de salones, la semana de exámenes y simulacros IB, concursos, trámites y RevisionDojo.</p><p>¿Qué necesitas?</p>`,
+    seguir:["cronograma","horarios","concursos","tramites","repositorio","biblioteca","apa","nucleo"] },
+  cronograma:{ texto:`<p>Los exámenes IB de la convocatoria de noviembre 2026 van del <strong>viernes 23 de octubre al viernes 13 de noviembre</strong>. Aquí está el calendario oficial del IB con la fecha de cada examen:</p>`,
+    enlaces:["cronograma"], seguir:["examenes","repositorio"] },
+  horarios:{ texto:`<p>Los horarios de salones se comparten por los canales oficiales del colegio. Si no encuentras el tuyo, pregúntale a tu tutor o tutora.</p>`,
+    seguir:["cronograma","tramites"] },
+  concursos:{ texto:`<p>Las bases y convocatorias de los concursos están en el <strong>Drive del colegio</strong>. Revisa bien los plazos y, si no tienes el enlace, pídeselo a tu tutor o tutora.</p><p>El Club de Ciencias también publica los concursos del mes en su periódico mural.</p>`,
+    seguir:["oportunidades","ciencias"] },
+  tramites:{ texto:`<p>Para trámites, evaluación y consultas académicas, acércate a tu tutor o tutora o al área académica del colegio. Ellos te dirán los pasos y los plazos.</p>`,
+    seguir:["horarios","cronograma"] },
+  repositorio:{ texto:`<p>En <strong>RevisionDojo</strong> encuentras recursos de estudio y práctica para tus asignaturas del Diploma IB, de NM y NS.</p><p>Úsalo para resolver preguntas tipo examen: es la mejor forma de prepararte.</p>`,
+    enlaces:["repositorio","fisica"], seguir:["nucleo","cronograma"] },
+  biblioteca:{ texto:`<p>La <strong>Biblioteca Coarina</strong> es la biblioteca virtual de Lima Provincias. Úsala para tus trabajos, IA y monografía.</p>`,
+    enlaces:["biblioteca"], seguir:["apa"] },
+  nucleo:{ texto:`<p>El núcleo del Diploma IB tiene tres partes:</p><ul><li><strong>Monografía:</strong> una investigación propia de hasta 4000 palabras.</li><li><strong>Teoría del Conocimiento (TdC):</strong> una exposición y un ensayo.</li><li><strong>CAS:</strong> experiencias de Creatividad, Actividad y Servicio.</li></ul><p>Lo que más ayuda es avanzar un poco cada semana.</p>`,
+    enlaces:["repositorio"], seguir:["semana","apa"] },
+  apa:{ texto:`<p>Completa los datos de tu fuente y te armo la referencia en formato <strong>APA (7.ª edición)</strong>.</p>`, especial:"apa" },
+
+  consejos:{ texto:`<p>Bienvenido a <strong>Brújula</strong>: prioridades, hábitos, planificación y bienestar. ¿Por dónde empezamos?</p>`,
+    seguir:["prioridades","smart","pomodoro","espacio","estres"] },
+  prioridades:{ texto:`<p>Elige <strong>máximo 3 prioridades al día</strong>. Para decidir, ordénalas así:</p><ul><li><strong>Urgente e importante:</strong> hazlo hoy.</li><li><strong>Importante, no urgente:</strong> agéndalo.</li><li><strong>Urgente, no importante:</strong> resuélvelo rápido.</li><li><strong>Ni urgente ni importante:</strong> déjalo para después.</li></ul>`,
+    seguir:["smart","semana"] },
+  smart:{ texto:`<p>Una meta <strong>SMART</strong> es:</p><ul><li><strong>Específica:</strong> dice exactamente qué harás.</li><li><strong>Medible:</strong> sabes cuándo está lista.</li><li><strong>Alcanzable:</strong> realista con tu tiempo.</li><li><strong>Relevante:</strong> te acerca a tu objetivo.</li><li><strong>Con tiempo:</strong> tiene fecha límite.</li></ul><p>Ejemplo: «Terminar el esquema de mi monografía el jueves a las 6 p. m.».</p>`,
+    seguir:["pomodoro","prioridades"] },
+  pomodoro:{ texto:`<p>La técnica <strong>Pomodoro</strong>: 25 minutos de concentración total y 5 de descanso. Cada cuatro bloques, toma un descanso largo de 15 a 30 minutos.</p><p>Deja el celular lejos y empieza por la tarea que más estás evitando.</p>`,
+    seguir:["espacio","semana"] },
+  espacio:{ texto:`<p>Arma tu espacio de estudio: mesa ordenada, buena luz, agua cerca y el celular lejos. Cada bloque de estudio, levántate, estírate y descansa la vista.</p>`,
+    seguir:["pomodoro","estres"] },
+  semana:{ texto:`<p>Para organizar tu semana:</p><ol><li>El domingo anota todas tus entregas y evaluaciones.</li><li>Elige tus 3 prioridades de cada día.</li><li>Divide los trabajos grandes, como la monografía o los IA, en bloques Pomodoro.</li><li>Deja espacios libres: siempre aparece algo de último momento.</li></ol>`,
+    seguir:["prioridades","pomodoro"] },
+  examenes:{ texto:`<p>Para estudiar mejor para tus exámenes:</p><ul><li>Practica con preguntas tipo examen en vez de solo releer.</li><li>Repasa en sesiones cortas durante varios días.</li><li>Explica el tema en voz alta como si se lo enseñaras a alguien.</li><li>Revisa tus errores y vuelve a intentar esas preguntas.</li></ul>`,
+    enlaces:["repositorio"], seguir:["cronograma","pomodoro"] },
+  estres:{ texto:`<p>Sentir que todo se acumula es muy común en el Diploma, y no tienes que cargarlo solo.</p><ul><li>Duerme lo suficiente: rindes más descansado.</li><li>Muévete un poco cada día y toma pausas reales.</li><li>Habla con alguien de confianza: tu tutor o tutora y el equipo de bienestar del COAR pueden ayudarte a ordenar la carga.</li></ul>`,
+    seguir:["prioridades","espacio"] },
+  crisis:{ texto:`<p>Gracias por contármelo. Lo que sientes importa y mereces ayuda ahora mismo.</p><p>Busca hoy a un adulto de confianza o al equipo de bienestar del COAR. En Perú puedes llamar gratis a la <strong>Línea 113, opción 5</strong> (salud mental). Si estás en peligro inmediato, llama al <strong>106</strong> (SAMU).</p>` },
+
+  vida:{ texto:`<p>Bienvenido a <strong>Puerto COAR</strong>: torneos, Interhouse, días festivos y el reglamento interno. ¿Qué buscas?</p>`,
+    seguir:["torneos","interhouse","festivos","reglamento","residencia"] },
+  torneos:{ texto:`<p>En el COAR hay torneos de <strong>juegos de mesa, deportes y hasta bailetón</strong>. Las fechas y horarios de cada actividad se anuncian en NotiCOAR y por los canales oficiales del colegio.</p>`,
+    seguir:["interhouse","gaceta"] },
+  interhouse:{ texto:`<p>El <strong>Interhouse</strong> es la competencia entre las casas del COAR, en la que cada casa suma puntos en distintas actividades. Pregúntale a tu tutor o tutora por la historia y los objetivos de tu casa.</p>`,
+    seguir:["torneos","festivos"] },
+  festivos:{ texto:`<p>En el COAR se celebran fechas especiales como el <strong>Día de la Madre, el Día del Padre, el Aniversario del colegio y el Día del Maestro</strong>. Las fechas de cada actividad se anuncian en NotiCOAR.</p>`,
+    seguir:["gaceta","torneos"] },
+  reglamento:{ texto:`<p>El <strong>Reglamento Interno</strong> reúne las normas de convivencia y disciplina: uniforme, uso de celulares y espacios comunes, y tus derechos y deberes. Para una duda puntual, consúltala con tu tutor o tutora para tener la versión vigente.</p>`,
+    seguir:["residencia","vida"] },
+  residencia:{ texto:`<p>La residencia, los permisos y las salidas tienen sus propias reglas dentro del Reglamento Interno. Antes de pedir un permiso, consulta los pasos con tu tutor o tutora.</p>`,
+    seguir:["reglamento","vida"] },
+  juegos:{ texto:`<p>Los <strong>Juegos Florales Literarios por el X Aniversario</strong> fueron un concurso de cuento breve, poesía y ensayo sobre el aniversario del COAR LP y la diversidad cultural. Las inscripciones fueron del 1 al 7 de setiembre y los trabajos se entregaron hasta el 18.</p>`,
+    seguir:["gaceta","festivos"] },
+  gaceta:{ texto:() => { const n = portada(); return `<p>Lo último del colegio está en <strong>NotiCOAR</strong>. En portada: <strong>${esc(n.titulo)}</strong>. Te la resalto.</p>`; },
+    accion:() => resaltarGaceta() },
+  canal:{ texto:`<p>Los avisos y novedades de GuideLight los publica el equipo TechWorld en su <strong>Canal TechWorld</strong>.</p>`,
+    seguir:["#canal"] },
+
+  clubes:{ texto:`<p>Esta es <strong>La Tripulación</strong>, los grupos a los que puedes sumarte:</p><ul><li><strong>Science without Limits</strong> · Club de Ciencias</li><li><strong>Beyond Robotics</strong> · Club de Robótica</li><li><strong>OSCEP COAR LP</strong> · la Orquesta Sinfónica</li></ul><p>¿Cuál te interesa?</p>`,
+    seguir:["ciencias","robotica","oscep"] },
+  ciencias:{ texto:`<p><strong>Science without Limits</strong> es el Club de Ciencias:</p><ul><li>Ponencia de método científico para tercero.</li><li>Aplicación en CDES, Física, Química, Biología y SAS.</li><li>Feria después de los exámenes IB, con apoyo de CONCYTEC.</li><li>Periódico mural actualizado cada mes con los concursos.</li></ul><p>Y una sorpresa que se contará en la feria.</p>`,
+    seguir:["robotica","oscep"] },
+  robotica:{ texto:`<p><strong>Beyond Robotics</strong> es el Club de Robótica del COAR: talleres de programación y construcción de robots, competencias y eventos de robótica, y apoyo en proyectos de tecnología e ingeniería.</p>`,
+    seguir:["ciencias","oscep"] },
+  oscep:{ texto:`<p><strong>OSCEP COAR LP</strong> es la Orquesta Sinfónica del COAR Lima Provincias, con secciones de cuerdas, vientos y percusión. Tiene ensayos y repertorio propio, y se presenta en aniversarios y eventos institucionales.</p><p>Para sumarte, pregunta por las audiciones a quien coordina la orquesta.</p>`,
+    seguir:["ciencias","robotica"] },
+
+  oportunidades:{ texto:`<p>Bienvenido a <strong>Nuevos Horizontes</strong>: becas nacionales e internacionales, convocatorias académicas y deportivas, voluntariados e intercambios. La lista actualizada está aquí:</p>`,
+    enlaces:["oportunidades"], seguir:["postular","concursos"] },
+  postular:{ texto:`<p>Para postular a una beca o convocatoria:</p><ol><li>Lee bien los requisitos y la fecha límite.</li><li>Prepara con tiempo tus documentos: certificados de notas, DNI y CV.</li><li>Escribe tu ensayo o carta de motivación y pide que te lo revisen.</li><li>Pide tus cartas de recomendación con al menos dos semanas de anticipación.</li></ol>`,
+    enlaces:["oportunidades"], seguir:["smart"] },
+
+  saludo:{ texto:`<p>¡Hola! ¿En qué te ayudo hoy? Escríbeme tu pregunta o toca uno de los 5 temas.</p>` },
+  gracias:{ texto:`<p>¡De nada! Aquí estoy para lo que necesites.</p>` },
+  quien:{ texto:`<p>Soy <strong>GuideLight</strong>, un asistente creado por el equipo TechWorld para los estudiantes del COAR Lima Provincias. Respondo sobre 5 temas: Faro Académico, Brújula, Puerto COAR, La Tripulación y Nuevos Horizontes.</p>`,
+    seguir:["#temas","#canal"] },
+  opinion:{ texto:`<p>¡Tu opinión nos ayuda a mejorar! Califica GuideLight del 1 al 10 y déjanos tus ideas.</p>`,
+    seguir:["#califica"] },
+  noentiendo:{ texto:`<p>Todavía no sé responder eso. Prueba con uno de estos temas o déjanos tu idea en Califica para que GuideLight aprenda.</p>`,
+    seguir:["academico","consejos","vida","clubes","oportunidades","#califica"] }
+};
+
+/* Palabras clave (sin tildes ni mayúsculas). Una palabra con * al final acepta cualquier terminación. */
+const CLAVES = {
+  crisis:["suicid*","matarme","quitarme la vida","hacerme dano","no quiero vivir","autolesion*","cortarme","quiero morir"],
+  apa:["apa","cita","citas","citar","referencia","referencias","bibliografia"],
+  juegos:["juegos florales","florales","concurso literario","cuento","poesia"],
+  cronograma:["cronograma","rol de examenes","examen","examenes","examenes ib","simulacro","simulacros","evaluacion","evaluaciones","fecha de examen","fechas"],
+  horarios:["horario","horarios","salon","salones","aula","aulas"],
+  concursos:["concurso","concursos","bases","drive"],
+  tramites:["tramite","tramites","constancia","certificado","certificados","consulta academica"],
+  repositorio:["repositorio","revisiondojo","revision dojo","dojo","guia","guias","nm","ns","recurso","recursos","material","materiales","past papers","criterios"],
+  biblioteca:["biblioteca","libro","libros","coarina","investigacion","fuentes"],
+  nucleo:["monografia","tok","tdc","teoria del conocimiento","cas","nucleo"],
+  prioridades:["prioridad","prioridades","priorizar","urgente","importante"],
+  smart:["smart","meta","metas","objetivo","objetivos"],
+  pomodoro:["pomodoro","concentrarme","concentracion","me distraigo","distraccion","celular","procrastin*","flojera","habito","habitos"],
+  espacio:["espacio de estudio","escritorio","lugar para estudiar","descanso","descansos"],
+  semana:["organizar","organizarme","planificar","planificacion","semana","agenda","tiempo"],
+  examenes:["estudiar para","prepararme","repasar","repaso","memorizar"],
+  estres:["estres","estresado","estresada","ansiedad","ansioso","ansiosa","cansado","cansada","agotado","agotada","presion","abrumado","abrumada","no puedo mas","triste"],
+  torneos:["torneo","torneos","deporte","deportes","baileton","juegos de mesa","campeonato"],
+  interhouse:["interhouse","casas","houses"],
+  festivos:["feriado","feriados","festivo","festivos","dia de la madre","dia del padre","dia del maestro","aniversario","celebracion"],
+  reglamento:["reglamento","norma","normas","regla","reglas","uniforme","celulares","sancion","conducta","convivencia","disciplina","derechos","deberes"],
+  residencia:["residencia","permiso","permisos","salida","salidas","dormitorio","visitas"],
+  ciencias:["ciencia","ciencias","science","science without limits","experimento","experimentos","laboratorio","concytec","feria","periodico mural"],
+  robotica:["robotica","robot","robots","beyond robotics","arduino","programacion","electronica","mecatronica","ingenieria"],
+  oscep:["oscep","orquesta","sinfonica","musica","instrumento","instrumentos","violin","audicion","audiciones","ensayos","repertorio"],
+  postular:["postular","postulacion","aplicar","requisitos","carta de motivacion","recomendacion","cv"],
+  academico:["faro academico","academico","academica","clase","clases","curso","cursos","notas","diploma","ib","asignatura","asignaturas"],
+  consejos:["brujula","consejo","consejos","tip","tips","estudiar","motivacion","productividad","bienestar"],
+  vida:["puerto coar","vida coar","vida en el coar","evento","eventos","actividades"],
+  clubes:["tripulacion","la tripulacion","club","clubes","taller","talleres","extracurricular"],
+  oportunidades:["nuevos horizontes","horizontes","oportunidad","oportunidades","beca","becas","convocatoria","convocatorias","voluntariado","voluntariados","intercambio","intercambios","pasantia"],
+  gaceta:["noticoar","noti coar","diario","noticia","noticias","novedad","novedades","periodico","que hay de nuevo","anuncio","anuncios"],
+  canal:["canal","techworld","creadores","actualizaciones"],
+  quien:["quien eres","que eres","que haces","como funcionas","quienes son","guidelight"],
+  opinion:["opinion","sugerencia","sugerencias","sugerir","calificar","califica","feedback","idea"],
+  saludo:["hola","holi","buenas","buenos dias","buenas tardes","buenas noches","hey","que tal"],
+  gracias:["gracias","muchas gracias","genial","chevere","bacan","pepa"]
+};
+const PESO = { crisis:20, estres:1.3, saludo:.4, gracias:.4, quien:.8 };
+
+/* =====================================================================
+   A PARTIR DE AQUÍ ESTÁ EL FUNCIONAMIENTO. No necesitas tocarlo.
+   ===================================================================== */
+const ICONOS = {
+  libro:'<path d="M12 21V7"/><path d="m16 12 2 2 4-4"/><path d="M22 6V4a1 1 0 0 0-1-1h-5a4 4 0 0 0-4 4 4 4 0 0 0-4-4H3a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h6a3 3 0 0 1 3 3 3 3 0 0 1 3-3h6a1 1 0 0 0 1-1v-1.3"/>',
+  brujula:'<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.8 5.41a2 2 0 0 1-1.27 1.27L7.76 16.24l1.8-5.41a2 2 0 0 1 1.27-1.27z"/>',
+  ancla:'<path d="M12 22V8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><circle cx="12" cy="5" r="3"/>',
+  tripulacion:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  horizonte:'<path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 6 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/>',
+  megafono:'<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+  periodico:'<path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/>',
+  abajo:'<path d="m6 9 6 6 6-6"/>',
+  enlace:'<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  flecha:'<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  enviar:'<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+  reiniciar:'<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>',
+  calendario:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  actualizar:'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  campana:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  chispa:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 3v4M17 5h4"/>',
+  pin:'<path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/>',
+  rayo:'<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
+  candado:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  corazon:'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>'
+};
+const ico = (n, g = 2) => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${g}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONOS[n] || ""}</svg>`;
+/* Mini faro-bot (para el logo, el chat y Califica): se dibuja sobre el fondo azul */
+const MINI_FARO = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3v4.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="3.6" r="2.3" fill="#F5B82E"/><path d="M16 13 Q16 6.5 24 6 Q32 6.5 32 13Z" fill="#FFFFFF"/><rect x="17" y="12" width="14" height="10" rx="3" fill="#0B1F3A"/><rect x="19.5" y="14" width="9" height="6" rx="1.8" fill="#FFD15C"/><rect x="14.5" y="21.5" width="19" height="3.6" rx="1.8" fill="#FFFFFF"/><path d="M18 25 H30 L33.5 42 H14.5 Z" fill="#FFFFFF"/><rect x="18.6" y="27" width="10.8" height="5.2" rx="2.6" fill="#0B1F3A"/><rect x="20.2" y="28.6" width="7.6" height="2" rx="1" fill="#8FE3FF"/><path d="M16.3 34.5 H31.7 L32.4 38 H15.6 Z" fill="#3B6EF5"/><rect x="12.5" y="41" width="23" height="3.6" rx="1.8" fill="#FFFFFF"/></svg>';
+
+const COLOR = { azul:["--c-azul","--t-azul"], coral:["--c-coral","--t-coral"], turq:["--c-turq","--t-turq"], lila:["--c-lila","--t-lila"], oro:["--c-oro","--t-oro"] };
+const varsColor = (c) => `--c:var(${COLOR[c][0]});--t:var(${COLOR[c][1]})`;
+const ETQ_NOTICIA = { evento:["azul","calendario"], actualizacion:["lila","actualizar"], aviso:["coral","campana"], informacion:["turq","info"], proximamente:["oro","chispa"] };
+const ETQ_CANAL = { nuevo:["oro","chispa"], actualizacion:["azul","actualizar"], funcion:["lila","rayo"], atajo:["turq","flecha"], proximamente:["oro","chispa"] };
+
+const $ = (s) => document.querySelector(s);
+const sinMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const normalizar = (s) => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","setiembre","octubre","noviembre","diciembre"];
+const DIAS = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+function fechaLarga(iso){ const [a, m, d] = iso.split("-").map(Number); return `${String(d).padStart(2, "0")} de ${MESES[m - 1]} de ${a}`; }
+function fechaCorta(iso){ const [a, m, d] = iso.split("-").map(Number); return `${d} ${MESES[m - 1].slice(0, 3)}`; }
+function dominio(url){ try { return new URL(url).hostname.replace(/^www\./, ""); } catch (e) { return ""; } }
+function irA(sel){ const el = $(sel); if (el) el.scrollIntoView({ behavior: sinMovimiento ? "auto" : "smooth", block: "start" }); }
+const ordenarPorFecha = (lista) => [...lista].sort((a, b) => b.fecha.localeCompare(a.fecha));
+function portada(){ return NOTICIAS.find((n) => n.portada) || ordenarPorFecha(NOTICIAS)[0]; }
+
+/* Íconos y mini faros en el HTML */
+document.querySelectorAll("[data-ico]").forEach((el) => { el.outerHTML = ico(el.dataset.ico); });
+document.querySelectorAll("[data-mini-faro]").forEach((el) => { el.innerHTML = MINI_FARO; });
+
+/* ---------- Temas: mini chips, órbita, tarjetas, detalle y chips del chat ---------- */
+let temaActivo = "academico";
+function pintarTemas(){
+  $("#mini-temas").innerHTML = TEMAS.map((t) => `<button class="mini-tema" type="button" data-ir-tema="${t.id}" style="${varsColor(t.color)}">${ico(t.icono)}${esc(t.nombre)}</button>`).join("");
+  $("#orbita").innerHTML = TEMAS.map((t, i) => `<div class="sat" style="--a:${i * 72 - 18}deg"><button class="sat-in" type="button" data-ir-tema="${t.id}" style="${varsColor(t.color)}" aria-label="${esc(t.nombre)}">${ico(t.icono)}<span class="sat-lbl">${esc(t.nombre)}</span></button></div>`).join("");
+  $("#temas-grid").innerHTML = TEMAS.map((t) => `<button class="tema" type="button" role="tab" id="tab-${t.id}" data-tema="${t.id}" aria-selected="false" style="${varsColor(t.color)}"><span class="check">${ico("check", 3)}</span><span class="tema-ico">${ico(t.icono)}</span><span class="tema-nom">${esc(t.nombre)}</span><span class="tema-txt">${esc(t.corto)}</span></button>`).join("");
+  $("#chips").innerHTML = TEMAS.map((t) => `<button class="chip" type="button" data-chat-tema="${t.id}" title="${esc(t.nombre)}" style="${varsColor(t.color)}">${ico(t.icono)}<span>${esc(t.chip)}</span></button>`).join("");
+  document.querySelectorAll("[data-tema]").forEach((b) => b.addEventListener("click", () => elegirTema(b.dataset.tema)));
+  document.querySelectorAll("[data-ir-tema]").forEach((b) => b.addEventListener("click", () => { elegirTema(b.dataset.irTema); irA("#temas"); }));
+  document.querySelectorAll("[data-chat-tema]").forEach((b) => b.addEventListener("click", () => { const t = TEMAS.find((x) => x.id === b.dataset.chatTema); preguntar(t.nombre, t.id); }));
+  elegirTema(temaActivo, true);
+}
+function elegirTema(id, inicial){
+  temaActivo = id;
+  const t = TEMAS.find((x) => x.id === id);
+  document.querySelectorAll(".tema").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tema === id)));
+  const det = $("#detalle");
+  det.setAttribute("aria-labelledby", "tab-" + id);
+  det.style.cssText = varsColor(t.color);
+  det.innerHTML = `
+    <div class="det-cab">
+      <div class="det-tit"><span class="tema-ico">${ico(t.icono)}</span><div><p class="lema">${esc(t.lema)}</p><h3>${esc(t.nombre)}</h3></div></div>
+      <p>${esc(t.resumen)}</p>
+      <div class="det-botones">
+        <button class="btn btn-tema btn-sm" type="button" id="det-preguntar">Preguntar sobre ${esc(t.nombre)} ${ico("flecha", 2.4)}</button>
+        ${t.enlaces.map((k) => `<a class="btn-link" href="${esc(ENLACES[k].url)}" target="_blank" rel="noopener noreferrer">${esc(ENLACES[k].titulo)} ${ico("enlace")}</a>`).join("")}
+      </div>
+    </div>
+    <ul class="det-lista">${t.puntos.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>`;
+  $("#det-preguntar").addEventListener("click", () => { irA("#chat"); setTimeout(() => preguntar(t.nombre, t.id), sinMovimiento ? 0 : 500); });
+  if (!inicial) { det.classList.remove("entra"); void det.offsetWidth; det.classList.add("entra"); }
+}
+
+/* ---------- Canal TechWorld ---------- */
+function pintarCanal(){
+  $("#notas").innerHTML = ordenarPorFecha(CANAL).map((n) => {
+    const [color, icono] = ETQ_CANAL[normalizar(n.tipo)] || ["azul", "info"];
+    return `<li class="nota"><span class="etq" style="${varsColor(color)}">${ico(icono)}${esc(n.tipo)}</span><p>${esc(n.texto)}</p><time datetime="${esc(n.fecha)}">${fechaCorta(n.fecha)}</time></li>`;
+  }).join("");
+}
+
+/* ---------- NotiCOAR ---------- */
+function etiquetaNoticia(nombre){
+  const k = normalizar(nombre);
+  const [color, icono] = ETQ_NOTICIA[k] || ["azul", "info"];
+  return `<span class="tag${k === "proximamente" ? " futuro" : ""}" style="${varsColor(color)}">${ico(icono)}${esc(nombre)}</span>`;
+}
+function articulo(n, principal){
+  return `<article class="art${principal ? " principal" : ""}">
+    <div class="art-etqs">${principal ? `<span class="tag portada">${ico("pin")}Portada</span>` : ""}${etiquetaNoticia(n.etiqueta)}</div>
+    <h3>${esc(n.titulo)}</h3>
+    <time datetime="${esc(n.fecha)}">${fechaLarga(n.fecha)}</time>
+    <p>${esc(n.texto)}</p>
+    ${n.enlace ? `<a class="art-link" href="${esc(n.enlace.url)}" target="_blank" rel="noopener noreferrer">${esc(n.enlace.texto)} ${ico("flecha", 2.4)}</a>` : ""}
+  </article>`;
+}
+function pintarGaceta(){
+  const hoy = new Date();
+  $("#gac-fecha").textContent = `${DIAS[hoy.getDay()]}, ${hoy.getDate()} de ${MESES[hoy.getMonth()]} de ${hoy.getFullYear()}`;
+  const ultima = ordenarPorFecha(NOTICIAS)[0];
+  if (ultima) $("#gac-act").textContent = "Act. " + fechaCorta(ultima.fecha);
+  const p = portada();
+  const resto = ordenarPorFecha(NOTICIAS).filter((n) => n !== p);
+  $("#gac-cuerpo").innerHTML = articulo(p, true) + resto.map((n) => articulo(n, false)).join("");
+}
+function resaltarGaceta(){
+  const g = $("#gaceta");
+  g.classList.remove("flash"); void g.offsetWidth; g.classList.add("flash");
+  $("#gac-cuerpo").scrollTop = 0;
+  if (window.matchMedia("(max-width: 960px)").matches) irA("#gaceta");
+}
+$("#gac-sugerir").addEventListener("click", () => { const i = $("#chat-input"); i.value = "Tengo una sugerencia: "; i.focus(); });
+
+/* ---------- Chat ---------- */
+const msgs = $("#msgs");
+let escribiendo = null;
+const bajar = () => { msgs.scrollTop = msgs.scrollHeight; };
+function tarjetaEnlace(e){
+  return `<a class="res-link" href="${esc(e.url)}" target="_blank" rel="noopener noreferrer"><span class="res-ico">${ico("enlace")}</span><span><span class="res-t">${esc(e.titulo)}</span><span class="res-d">${esc(dominio(e.url))}</span></span></a>`;
+}
+function filaBot(){
+  const fila = document.createElement("div");
+  fila.className = "fila bot entra";
+  fila.innerHTML = `<span class="mini-av" aria-hidden="true">${MINI_FARO}</span>`;
+  return fila;
+}
+function mensajeUsuario(texto){
+  const fila = document.createElement("div");
+  fila.className = "fila user entra";
+  const m = document.createElement("div");
+  m.className = "msg user";
+  m.textContent = texto;
+  fila.appendChild(m);
+  msgs.appendChild(fila); bajar();
+}
+function mensajeBot(id){
+  const r = R[id] || R.noentiendo;
+  const fila = filaBot();
+  const m = document.createElement("div");
+  m.className = "msg bot";
+  let html = typeof r.texto === "function" ? r.texto() : r.texto;
+  if (r.enlaces) html += `<div class="res">${r.enlaces.map((k) => tarjetaEnlace(ENLACES[k])).join("")}</div>`;
+  m.innerHTML = html;
+  if (r.especial === "apa") m.appendChild(herramientaAPA());
+  if (r.seguir && r.seguir.length) {
+    const cont = document.createElement("div");
+    cont.className = "seguir";
+    r.seguir.forEach((s) => {
+      const op = typeof s === "string" ? { t: ETIQUETAS[s], id: s } : s;
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "pill"; b.textContent = op.t;
+      b.addEventListener("click", () => op.id.startsWith("#") ? irA(op.id) : preguntar(op.t, op.id));
+      cont.appendChild(b);
+    });
+    m.appendChild(cont);
+  }
+  fila.appendChild(m);
+  msgs.appendChild(fila); bajar();
+  if (r.accion) r.accion();
+}
+function mostrarEscribiendo(){
+  if (escribiendo) return;
+  escribiendo = filaBot();
+  escribiendo.setAttribute("aria-label", "GuideLight está escribiendo");
+  escribiendo.insertAdjacentHTML("beforeend", '<div class="msg bot typing"><span></span><span></span><span></span></div>');
+  msgs.appendChild(escribiendo); bajar();
+}
+function quitarEscribiendo(){ if (escribiendo) { escribiendo.remove(); escribiendo = null; } }
+function coincide(texto, clave){
+  const abierta = clave.endsWith("*");
+  const k = (abierta ? clave.slice(0, -1) : clave).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp("(^|[^a-z0-9])" + k + (abierta ? "" : "($|[^a-z0-9])")).test(texto);
+}
+function detectar(texto){
+  const t = normalizar(texto);
+  let mejor = null, max = 0;
+  for (const [id, lista] of Object.entries(CLAVES)) {
+    let puntos = 0;
+    for (const k of lista) if (coincide(t, k)) puntos += (1 + k.split(" ").length) * (PESO[id] || 1);
+    if (puntos > max) { max = puntos; mejor = id; }
+  }
+  return mejor || "noentiendo";
+}
+function preguntar(texto, idForzado){
+  mensajeUsuario(texto);
+  const id = idForzado || detectar(texto);
+  mostrarEscribiendo();
+  const largo = R[id] && typeof R[id].texto === "string" ? R[id].texto.length : 200;
+  setTimeout(() => { quitarEscribiendo(); mensajeBot(id); }, sinMovimiento ? 150 : 450 + Math.min(650, largo));
+}
+function reiniciar(){ quitarEscribiendo(); msgs.innerHTML = ""; mensajeBot("inicio"); }
+function enviarMensaje(){
+  const input = $("#chat-input");
+  const texto = input.value.trim();
+  if (!texto) { input.focus(); return; }
+  input.value = "";
+  preguntar(texto);
+}
+/* Enter envía el mensaje (Shift+Enter no hace nada; se respeta la escritura con tildes del teclado) */
+$("#chat-input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); enviarMensaje(); }
+});
+$("#enviar").addEventListener("click", enviarMensaje);
+$("#composer").addEventListener("submit", (e) => { e.preventDefault(); enviarMensaje(); });
+$("#reiniciar").addEventListener("click", reiniciar);
+$("#bocadillo").addEventListener("click", () => { irA("#chat"); setTimeout(() => $("#chat-input").focus({ preventScroll: true }), sinMovimiento ? 0 : 600); });
+
+/* ---------- Generador de citas APA ---------- */
+let nAPA = 0;
+function herramientaAPA(){
+  const n = ++nAPA;
+  const caja = document.createElement("div");
+  caja.className = "apa";
+  caja.innerHTML = `
+    <div class="apa-tabs" role="group" aria-label="Tipo de fuente">
+      <button type="button" data-tipo="web" aria-pressed="true">Página web</button>
+      <button type="button" data-tipo="libro" aria-pressed="false">Libro</button>
+    </div>
+    <div class="apa-grid">
+      <label for="apa${n}-ap">Apellido(s) del autor<input id="apa${n}-ap" data-f="apellido" placeholder="Vargas Llosa"></label>
+      <label for="apa${n}-no">Nombre(s)<input id="apa${n}-no" data-f="nombre" placeholder="Mario"></label>
+      <label for="apa${n}-an">Año<input id="apa${n}-an" data-f="anio" inputmode="numeric" maxlength="4" placeholder="2024"></label>
+      <label for="apa${n}-ti">Título<input id="apa${n}-ti" data-f="titulo" placeholder="La ciudad y los perros"></label>
+      <label class="full" for="apa${n}-si" data-solo="web">Nombre del sitio web<input id="apa${n}-si" data-f="sitio" placeholder="Biblioteca Coarina"></label>
+      <label class="full" for="apa${n}-ur" data-solo="web">URL<input id="apa${n}-ur" data-f="url" placeholder="https://…"></label>
+      <label class="full" for="apa${n}-ed" data-solo="libro" hidden>Editorial<input id="apa${n}-ed" data-f="editorial" placeholder="Alfaguara"></label>
+    </div>
+    <p class="apa-out vacio" aria-live="polite">Completa los campos y aquí aparece tu referencia.</p>
+    <div class="apa-pie"><button type="button" class="pill" data-copiar>Copiar referencia</button><span>Sin autor, déjalo vacío. Sin año, se usa «s. f.».</span></div>`;
+  let tipo = "web";
+  const out = caja.querySelector(".apa-out");
+  const val = (f) => caja.querySelector(`[data-f="${f}"]`).value.trim();
+  const punto = (s) => /[.?!]$/.test(s) ? s : s + ".";
+  function armar(){
+    const ap = val("apellido"), no = val("nombre"), anio = val("anio") || "s. f.", tit = val("titulo");
+    const iniciales = no.split(/\s+/).filter(Boolean).map((x) => x[0].toUpperCase() + ".").join(" ");
+    const autor = ap ? (iniciales ? `${ap}, ${iniciales}` : ap) : "";
+    if (!tit) { out.classList.add("vacio"); out.textContent = "Completa los campos y aquí aparece tu referencia."; return null; }
+    let html, plano;
+    if (tipo === "web") {
+      const sitio = val("sitio"), url = val("url");
+      const sitioH = sitio && sitio !== ap ? ` ${esc(punto(sitio))}` : "";
+      const sitioP = sitio && sitio !== ap ? ` ${punto(sitio)}` : "";
+      if (autor) {
+        html = `${esc(punto(autor))} (${esc(anio)}). <i>${esc(punto(tit))}</i>${sitioH}${url ? " " + esc(url) : ""}`;
+        plano = `${punto(autor)} (${anio}). ${punto(tit)}${sitioP}${url ? " " + url : ""}`;
+      } else {
+        html = `<i>${esc(punto(tit))}</i> (${esc(anio)}).${sitioH}${url ? " " + esc(url) : ""}`;
+        plano = `${punto(tit)} (${anio}).${sitioP}${url ? " " + url : ""}`;
+      }
+    } else {
+      const ed = val("editorial");
+      const edT = ed ? ` ${punto(ed)}` : "";
+      html = autor ? `${esc(punto(autor))} (${esc(anio)}). <i>${esc(punto(tit))}</i>${esc(edT)}` : `<i>${esc(punto(tit))}</i> (${esc(anio)}).${esc(edT)}`;
+      plano = autor ? `${punto(autor)} (${anio}). ${punto(tit)}${edT}` : `${punto(tit)} (${anio}).${edT}`;
+    }
+    out.classList.remove("vacio");
+    out.innerHTML = html;
+    return plano;
+  }
+  caja.querySelectorAll("input").forEach((i) => i.addEventListener("input", armar));
+  caja.querySelectorAll("[data-tipo]").forEach((b) => b.addEventListener("click", () => {
+    tipo = b.dataset.tipo;
+    caja.querySelectorAll("[data-tipo]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    caja.querySelectorAll("[data-solo]").forEach((l) => { l.hidden = l.dataset.solo !== tipo; });
+    armar();
+  }));
+  caja.querySelector("[data-copiar]").addEventListener("click", (e) => {
+    const boton = e.currentTarget;
+    const plano = armar();
+    const volver = (txt, ms) => { boton.textContent = txt; setTimeout(() => (boton.textContent = "Copiar referencia"), ms); };
+    if (!plano) { volver("Primero escribe el título", 1600); return; }
+    const seleccionar = () => { const r = document.createRange(); r.selectNodeContents(out); const s = window.getSelection(); s.removeAllRanges(); s.addRange(r); volver("Selecciónala y cópiala", 2200); };
+    try { navigator.clipboard.writeText(plano).then(() => volver("¡Copiada!", 1600), seleccionar); } catch (err) { seleccionar(); }
+  });
+  return caja;
+}
+
+/* ---------- Califica GuideLight ---------- */
+const escala = $("#escala");
+escala.innerHTML = Array.from({ length: 10 }, (_, i) => `<label><input type="radio" name="nota" value="${i + 1}" id="nota-${i + 1}"><span>${i + 1}</span></label>`).join("");
+const REACCIONES = [[3, "Gracias, ¿qué mejoramos?"], [6, "Vamos bien"], [8, "Por buen camino"], [10, "¡Excelente!"]];
+function reaccionar(nota){
+  const faro = $("#reaccion-faro");
+  faro.style.setProperty("--brillo", nota ? (0.25 + nota * 0.075).toFixed(2) : ".35");
+  faro.classList.toggle("feliz", nota >= 7);
+  $("#reaccion-txt").textContent = nota ? (REACCIONES.find(([max]) => nota <= max) || REACCIONES[3])[1] : "Elige una nota";
+  escala.querySelectorAll("label").forEach((l, i) => l.classList.toggle("on", nota && i + 1 < nota));
+}
+escala.addEventListener("change", () => reaccionar(Number(($('input[name="nota"]:checked') || {}).value || 0)));
+if (MODO_PRUEBA) $("#cal-prueba").hidden = false;
+$("#cal-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const estado = $("#cal-estado");
+  const elegido = $('input[name="nota"]:checked');
+  if (!elegido) { estado.className = "estado falta"; estado.textContent = "Elige una nota del 1 al 10 para enviar."; return; }
+  /* Aquí se enviará la calificación cuando conectemos el formulario. */
+  estado.className = "estado bien";
+  estado.textContent = `¡Gracias! Tu nota fue ${elegido.value}/10.`;
+  e.target.reset();
+  reaccionar(0);
+});
+
+/* ---------- Pie ---------- */
+$("#pie-links").innerHTML = ["biblioteca","repositorio","oportunidades"].map((k) => `<a href="${esc(ENLACES[k].url)}" target="_blank" rel="noopener noreferrer">${ico("enlace")}${esc(ENLACES[k].titulo)}</a>`).join("");
+
+/* ---------- Arranque ---------- */
+pintarTemas();
+pintarCanal();
+pintarGaceta();
+reiniciar();
+</script>
+</body>
+</html>
