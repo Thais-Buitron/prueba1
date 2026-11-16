@@ -309,6 +309,11 @@ section[id]{scroll-margin-top:92px}
 .gac-pie{margin:0 18px;padding:10px 0 14px;border-top:4px double var(--navy);text-align:center;font:600 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .gac-pie button{border:0;background:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--blue);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;cursor:pointer}
 
+/* ---------- Respuestas con IA ---------- */
+.msg.bot a:not(.res-link){color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.ia-nota{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font:500 11.5px var(--f-mono);color:var(--muted)}
+.ia-nota .ico{font-size:13px;color:var(--blue)}
+
 /* ---------- Herramienta APA ---------- */
 .apa{margin-top:12px;padding:12px;border-radius:16px;background:var(--bg);border:1px solid var(--line)}
 .apa-tabs{display:inline-flex;padding:4px;border-radius:999px;background:#fff;margin-bottom:10px;border:1px solid var(--line)}
@@ -642,10 +647,9 @@ section[id]{scroll-margin-top:92px}
    - portada:  true para ponerla como noticia principal (solo una)
    - enlace:   opcional, { texto:"...", url:"https://..." }            */
 const NOTICIAS = [
-  { fecha:"2026-10-10", etiqueta:"Aviso", portada:true,
-    titulo:"¡Se vienen los exámenes IB!",
-    texto:"La convocatoria de noviembre 2026 del Diploma IB va del viernes 23 de octubre al viernes 13 de noviembre. Revisa el calendario oficial, descansa bien y confía en todo lo que preparaste. ¡Mucho éxito, promo!",
-    enlace:{ texto:"Ver el calendario oficial del IB", url:"https://ibo.org/globalassets/new-structure/programmes/dp/pdfs/november-2026-examination-schedule.pdf" } },
+  { fecha:"2026-11-14", etiqueta:"Aviso", portada:true,
+    titulo:"¡Terminaron los exámenes IB!",
+    texto:"Felicitaciones, promo: la convocatoria de noviembre 2026 del Diploma IB terminó el 13 de noviembre. Los resultados se publican en enero de 2027; tu coordinador o coordinadora IB confirmará la fecha exacta. Ahora toca descansar." },
   { fecha:"2026-10-10", etiqueta:"Próximamente",
     titulo:"Feria de ciencias con apoyo de CONCYTEC",
     texto:"Science without Limits prepara una feria para después de los exámenes IB. Dicen que habrá una sorpresa…" },
@@ -672,8 +676,7 @@ const ENLACES = {
   cronograma:    { titulo:"Calendario oficial de exámenes IB", url:"https://ibo.org/globalassets/new-structure/programmes/dp/pdfs/november-2026-examination-schedule.pdf" },
   repositorio:   { titulo:"RevisionDojo", url:"https://www.revisiondojo.com/" },
   fisica:        { titulo:"Física y Química IB", url:"https://fisicayquimicaonline.blogspot.com/p/fisica-ib-nivel-medio.html" },
-  english:       { titulo:"English Preparation", url:"https://coar.myexamslab.com/home" },
-   oportunidades: { titulo:"Oportunidades para coarinos", url:"https://www.coarinos.org/oportunidades" }
+  oportunidades: { titulo:"Oportunidades para coarinos", url:"https://www.coarinos.org/oportunidades" }
 };
 
 /* ---------- 4. LOS 5 TEMAS ---------- */
@@ -682,7 +685,7 @@ const TEMAS = [
     corto:"Horarios, exámenes IB, concursos y RevisionDojo.",
     resumen:"Todo lo de clases en un solo lugar: horarios de salones, la semana de exámenes y simulacros IB, concursos, trámites y RevisionDojo para practicar.",
     puntos:["Horarios de salones","Semana de exámenes y simulacros IB","Concursos: bases y convocatorias en el Drive del colegio","Trámites, evaluación y consultas académicas","RevisionDojo: práctica y recursos por asignatura IB","Criterios de evaluación y formatos"],
-    enlaces:["biblioteca","cronograma","repositorio","fisica","english"] },
+    enlaces:["biblioteca","cronograma","repositorio","fisica"] },
   { id:"consejos", nombre:"Brújula", chip:"Brújula", color:"coral", icono:"brujula", lema:"Hábitos que te orientan",
     corto:"Prioridades, metas SMART, Pomodoro y bienestar.",
     resumen:"Para cuando no sabes por dónde empezar: cómo priorizar, poner metas que sí se cumplen y estudiar sin quemarte.",
@@ -709,6 +712,64 @@ const TEMAS = [
    true = modo de prueba (no guarda nada). Lo conectamos a un Google Form al publicar. */
 const MODO_PRUEBA = true;
 
+/* ---------- 6. FECHAS DEL IB ----------
+   GuideLight usa estas fechas para saber si los exámenes vienen, están en curso o ya terminaron. */
+const FECHAS_IB = { inicio:"2026-10-23", fin:"2026-11-13", resultados:"enero de 2027" };
+
+/* ---------- 7. GLOSARIO DEL COAR ----------
+   Siglas y palabras propias del colegio. GuideLight las reconoce («¿qué es TEMP?»)
+   y la IA las usa para entender las preguntas.
+   - terminos:    cómo las escriben los estudiantes (sin importar mayúsculas ni tildes)
+   - significado: qué quieren decir
+   - tema:        opcional, la respuesta del chat que mejor la explica
+   Agrega las que falten, por ejemplo CDES o SD.                                  */
+const GLOSARIO = [
+  { terminos:["TEMP"], nombre:"TEMP", significado:"Tecnología para el Emprendimiento." },
+  { terminos:["TdC","TOK","teoria del conocimiento"], nombre:"TdC (TOK)", significado:"Teoría del Conocimiento: parte del núcleo del Diploma IB, con una exposición y un ensayo.", tema:"nucleo" },
+  { terminos:["CAS"], nombre:"CAS", significado:"Creatividad, Actividad y Servicio: experiencias que forman parte del núcleo del Diploma IB.", tema:"cas" },
+  { terminos:["IA","evaluacion interna"], nombre:"IA", significado:"Evaluación interna (en inglés, Internal Assessment): un trabajo de cada asignatura que corrige tu profesor y que el IB modera." },
+  { terminos:["monografia","EE"], nombre:"Monografía (EE)", significado:"Investigación propia de hasta 4000 palabras; forma parte del núcleo del Diploma IB.", tema:"nucleo" },
+  { terminos:["NM","SL"], nombre:"NM", significado:"Nivel Medio de una asignatura IB (en inglés, SL)." },
+  { terminos:["NS","HL"], nombre:"NS", significado:"Nivel Superior de una asignatura IB (en inglés, HL)." },
+  { terminos:["AE"], nombre:"AE", significado:"Matemáticas: Análisis y Enfoques, una de las asignaturas de Matemáticas del IB." },
+  { terminos:["SAS"], nombre:"SAS", significado:"Sistemas Ambientales y Sociedades, asignatura del IB." },
+  { terminos:["salida general","salidas generales"], nombre:"Salida general", significado:"Cuando los estudiantes salen de la residencia y vuelven a sus casas." },
+  { terminos:["promo","promocion"], nombre:"Promo", significado:"La promoción: los estudiantes que terminan el colegio el mismo año." },
+  { terminos:["COAR"], nombre:"COAR", significado:"Colegio de Alto Rendimiento." },
+  { terminos:["IB","BI"], nombre:"IB", significado:"Bachillerato Internacional (en inglés, International Baccalaureate)." },
+  { terminos:["Interhouse"], nombre:"Interhouse", significado:"La competencia entre las casas del COAR.", tema:"interhouse" }
+];
+
+/* ---------- 8. DATOS DEL COAR POR COMPLETAR ----------
+   Escribe el dato entre las comillas. Mientras esté vacío, GuideLight no lo inventa:
+   dice que aún no lo tiene. La IA también usa estos datos.
+   Nunca pongas teléfonos personales, notas ni datos de estudiantes.               */
+const DATOS = {
+  comedor:    "",  // horarios de desayuno, almuerzo y cena
+  enfermeria: "",  // dónde está y en qué horario atiende
+  bienestar:  "",  // cómo pedir cita con psicología o bienestar
+  visitas:    "",  // cuándo pueden visitar las familias
+  salidas:    "",  // fechas de las próximas salidas generales
+  uniforme:   "",  // qué uniforme se usa cada día
+  perdidos:   "",  // dónde preguntar por objetos perdidos
+  faltas:     "",  // cómo justificar una inasistencia
+  horarios:   "",  // dónde ver el horario de clases de cada sección
+  entregas:   "",  // fechas internas de Monografía, IA, TdC y CAS
+  eventos:    "",  // fechas de torneos, Interhouse y aniversario
+  robotica:   "",  // cómo unirse a Beyond Robotics y cuándo se reúne
+  ciencias:   "",  // cómo unirse a Science without Limits y fecha de la feria
+  oscep:      ""   // fechas de audiciones y ensayos de la OSCEP
+};
+
+/* ---------- 9. INTELIGENCIA ARTIFICIAL ----------
+   Pega aquí la dirección de tu servidor de IA (el worker de Cloudflare), por ejemplo
+   "https://guidelight-ia.tu-subdominio.workers.dev".
+   - Con dirección: la IA responde las preguntas que se escriben, usando todo lo que
+     sabe GuideLight (temas, glosario, datos, noticias y enlaces).
+   - Vacío (""): GuideLight responde solo con sus respuestas programadas.
+   Si la IA falla o se acaba su cuota del día, GuideLight responde como siempre.     */
+const IA_URL = "";
+
 /* =====================================================================
    RESPUESTAS DEL CHAT
    texto: lo que responde · enlaces: de ENLACES · seguir: botones siguientes
@@ -721,7 +782,7 @@ const ETIQUETAS = {
   estres:"Siento mucha presión", examenes:"Estudiar para exámenes", semana:"Organizar mi semana",
   torneos:"Torneos", interhouse:"Interhouse", festivos:"Días festivos", reglamento:"Reglamento interno", residencia:"Residencia y permisos",
   ciencias:"Science without Limits", robotica:"Beyond Robotics", oscep:"OSCEP COAR LP", postular:"Cómo postular",
-  juegos:"Juegos Florales", gaceta:"Ver NotiCOAR", "#califica":"Ir a Califica", "#temas":"Ver los 5 temas", "#canal":"Ver el Canal TechWorld"
+  juegos:"Juegos Florales", gaceta:"Ver NotiCOAR", bienestar:"Hablar con bienestar", sueno:"No puedo dormir", cas:"¿Qué es CAS?", "#califica":"Ir a Califica", "#temas":"Ver los 5 temas", "#canal":"Ver el Canal TechWorld"
 };
 
 const R = {
@@ -730,7 +791,7 @@ const R = {
 
   academico:{ texto:`<p>Bienvenido a <strong>Faro Académico</strong>. Te ayudo con horarios de salones, la semana de exámenes y simulacros IB, concursos, trámites y RevisionDojo.</p><p>¿Qué necesitas?</p>`,
     seguir:["cronograma","horarios","concursos","tramites","repositorio","biblioteca","apa","nucleo"] },
-  cronograma:{ texto:`<p>Los exámenes IB de la convocatoria de noviembre 2026 van del <strong>viernes 23 de octubre al viernes 13 de noviembre</strong>. Aquí está el calendario oficial del IB con la fecha de cada examen:</p>`,
+  cronograma:{ texto:() => `<p>${textoIB()}</p><p>Aquí está el calendario oficial del IB con la fecha de cada examen:</p>`,
     enlaces:["cronograma"], seguir:["examenes","repositorio"] },
   horarios:{ texto:`<p>Los horarios de salones se comparten por los canales oficiales del colegio. Si no encuentras el tuyo, pregúntale a tu tutor o tutora.</p>`,
     seguir:["cronograma","tramites"] },
@@ -743,11 +804,11 @@ const R = {
   biblioteca:{ texto:`<p>La <strong>Biblioteca Coarina</strong> es la biblioteca virtual de Lima Provincias. Úsala para tus trabajos, IA y monografía.</p>`,
     enlaces:["biblioteca"], seguir:["apa"] },
   nucleo:{ texto:`<p>El núcleo del Diploma IB tiene tres partes:</p><ul><li><strong>Monografía:</strong> una investigación propia de hasta 4000 palabras.</li><li><strong>Teoría del Conocimiento (TdC):</strong> una exposición y un ensayo.</li><li><strong>CAS:</strong> experiencias de Creatividad, Actividad y Servicio.</li></ul><p>Lo que más ayuda es avanzar un poco cada semana.</p>`,
-    enlaces:["repositorio"], seguir:["semana","apa"] },
+    enlaces:["repositorio"], seguir:["semana","cas","apa"] },
   apa:{ texto:`<p>Completa los datos de tu fuente y te armo la referencia en formato <strong>APA (7.ª edición)</strong>.</p>`, especial:"apa" },
 
   consejos:{ texto:`<p>Bienvenido a <strong>Brújula</strong>: prioridades, hábitos, planificación y bienestar. ¿Por dónde empezamos?</p>`,
-    seguir:["prioridades","smart","pomodoro","espacio","estres"] },
+    seguir:["prioridades","smart","pomodoro","espacio","estres","sueno","bienestar"] },
   prioridades:{ texto:`<p>Elige <strong>máximo 3 prioridades al día</strong>. Para decidir, ordénalas así:</p><ul><li><strong>Urgente e importante:</strong> hazlo hoy.</li><li><strong>Importante, no urgente:</strong> agéndalo.</li><li><strong>Urgente, no importante:</strong> resuélvelo rápido.</li><li><strong>Ni urgente ni importante:</strong> déjalo para después.</li></ul>`,
     seguir:["smart","semana"] },
   smart:{ texto:`<p>Una meta <strong>SMART</strong> es:</p><ul><li><strong>Específica:</strong> dice exactamente qué harás.</li><li><strong>Medible:</strong> sabes cuándo está lista.</li><li><strong>Alcanzable:</strong> realista con tu tiempo.</li><li><strong>Relevante:</strong> te acerca a tu objetivo.</li><li><strong>Con tiempo:</strong> tiene fecha límite.</li></ul><p>Ejemplo: «Terminar el esquema de mi monografía el jueves a las 6 p. m.».</p>`,
@@ -762,6 +823,13 @@ const R = {
     enlaces:["repositorio"], seguir:["cronograma","pomodoro"] },
   estres:{ texto:`<p>Sentir que todo se acumula es muy común en el Diploma, y no tienes que cargarlo solo.</p><ul><li>Duerme lo suficiente: rindes más descansado.</li><li>Muévete un poco cada día y toma pausas reales.</li><li>Habla con alguien de confianza: tu tutor o tutora y el equipo de bienestar del COAR pueden ayudarte a ordenar la carga.</li></ul>`,
     seguir:["prioridades","espacio"] },
+  bienestar:{ texto:() => `<p>El equipo de <strong>bienestar del COAR</strong> está para escucharte, sea por estrés, problemas de convivencia o porque extrañas a tu familia. No tienes que esperar a que todo se ponga difícil para ir.</p>` +
+      (DATOS.bienestar.trim() ? `<p>${esc(DATOS.bienestar)}</p>` : `<p>Para pedir una cita, acércate a tu tutor o tutora: te dirá cómo y cuándo atienden.</p>`),
+    seguir:["estres","sueno"] },
+  sueno:{ texto:`<p>Dormir bien también es estudiar: el descanso ayuda a fijar lo que aprendiste. Prueba esto:</p><ul><li>Acuéstate y levántate a la misma hora, incluso antes de un examen.</li><li>Deja el celular lejos de 30 a 60 minutos antes de dormir.</li><li>No estudies en la cama y evita el café en la tarde.</li><li>Si no te duermes en unos 20 minutos, levántate y haz algo tranquilo hasta que te dé sueño.</li></ul><p>Si te pasa seguido, habla con bienestar o con tu tutor o tutora.</p>`,
+    seguir:["bienestar","estres"] },
+  cas:{ texto:`<p><strong>CAS</strong> significa Creatividad, Actividad y Servicio. Es parte del núcleo del Diploma IB:</p><ul><li>Lo desarrollas durante unos 18 meses del Diploma.</li><li>Incluye experiencias de creatividad, actividad y servicio, y un proyecto CAS.</li><li>Reflexionas sobre lo que aprendes en cada experiencia.</li></ul><p>Las actividades de los clubes pueden contar como experiencias CAS si cumplen los criterios. Confírmalo con tu coordinador o coordinadora CAS.</p>`,
+    seguir:["clubes","nucleo"] },
   crisis:{ texto:`<p>Gracias por contármelo. Lo que sientes importa y mereces ayuda ahora mismo.</p><p>Busca hoy a un adulto de confianza o al equipo de bienestar del COAR. En Perú puedes llamar gratis a la <strong>Línea 113, opción 5</strong> (salud mental). Si estás en peligro inmediato, llama al <strong>106</strong> (SAMU).</p>` },
 
   vida:{ texto:`<p>Bienvenido a <strong>Puerto COAR</strong>: torneos, Interhouse, días festivos y el reglamento interno. ¿Qué buscas?</p>`,
@@ -784,12 +852,12 @@ const R = {
     seguir:["#canal"] },
 
   clubes:{ texto:`<p>Esta es <strong>La Tripulación</strong>, los grupos a los que puedes sumarte:</p><ul><li><strong>Science without Limits</strong> · Club de Ciencias</li><li><strong>Beyond Robotics</strong> · Club de Robótica</li><li><strong>OSCEP COAR LP</strong> · la Orquesta Sinfónica</li></ul><p>¿Cuál te interesa?</p>`,
-    seguir:["ciencias","robotica","oscep"] },
-  ciencias:{ texto:`<p><strong>Science without Limits</strong> es el Club de Ciencias:</p><ul><li>Ponencia de método científico para tercero.</li><li>Aplicación en CDES, Física, Química, Biología y SAS.</li><li>Feria después de los exámenes IB, con apoyo de CONCYTEC.</li><li>Periódico mural actualizado cada mes con los concursos.</li></ul><p>Y una sorpresa que se contará en la feria.</p>`,
+    seguir:["ciencias","robotica","oscep","cas"] },
+  ciencias:{ texto:() => `<p><strong>Science without Limits</strong> es el Club de Ciencias:</p><ul><li>Ponencia de método científico para tercero.</li><li>Aplicación en CDES, Física, Química, Biología y SAS.</li><li>Feria después de los exámenes IB, con apoyo de CONCYTEC.</li><li>Periódico mural actualizado cada mes con los concursos.</li></ul><p>Y una sorpresa que se contará en la feria.</p>` + extraDato("ciencias"),
     seguir:["robotica","oscep"] },
-  robotica:{ texto:`<p><strong>Beyond Robotics</strong> es el Club de Robótica del COAR: talleres de programación y construcción de robots, competencias y eventos de robótica, y apoyo en proyectos de tecnología e ingeniería.</p>`,
+  robotica:{ texto:() => `<p><strong>Beyond Robotics</strong> es el Club de Robótica del COAR: talleres de programación y construcción de robots, competencias y eventos de robótica, y apoyo en proyectos de tecnología e ingeniería.</p>` + extraDato("robotica"),
     seguir:["ciencias","oscep"] },
-  oscep:{ texto:`<p><strong>OSCEP COAR LP</strong> es la Orquesta Sinfónica del COAR Lima Provincias, con secciones de cuerdas, vientos y percusión. Tiene ensayos y repertorio propio, y se presenta en aniversarios y eventos institucionales.</p><p>Para sumarte, pregunta por las audiciones a quien coordina la orquesta.</p>`,
+  oscep:{ texto:() => `<p><strong>OSCEP COAR LP</strong> es la Orquesta Sinfónica del COAR Lima Provincias, con secciones de cuerdas, vientos y percusión. Tiene ensayos y repertorio propio, y se presenta en aniversarios y eventos institucionales.</p><p>Para sumarte, pregunta por las audiciones a quien coordina la orquesta.</p>` + extraDato("oscep"),
     seguir:["ciencias","robotica"] },
 
   oportunidades:{ texto:`<p>Bienvenido a <strong>Nuevos Horizontes</strong>: becas nacionales e internacionales, convocatorias académicas y deportivas, voluntariados e intercambios. La lista actualizada está aquí:</p>`,
@@ -818,10 +886,13 @@ const CLAVES = {
   tramites:["tramite","tramites","constancia","certificado","certificados","consulta academica"],
   repositorio:["repositorio","revisiondojo","revision dojo","dojo","guia","guias","nm","ns","recurso","recursos","material","materiales","past papers","criterios"],
   biblioteca:["biblioteca","libro","libros","coarina","investigacion","fuentes"],
-  nucleo:["monografia","tok","tdc","teoria del conocimiento","cas","nucleo"],
+  nucleo:["monografia","tok","tdc","teoria del conocimiento","nucleo"],
+  cas:["cas","creatividad actividad servicio","proyecto cas","experiencia cas","experiencias cas"],
+  bienestar:["psicolog*","bienestar","cita con","hablar con alguien","orientador*","consejer*","terapia"],
+  sueno:["no puedo dormir","dormir","duermo","sueno","insomnio","desvel*","trasnoch*"],
   prioridades:["prioridad","prioridades","priorizar","urgente","importante"],
   smart:["smart","meta","metas","objetivo","objetivos"],
-  pomodoro:["pomodoro","concentrarme","concentracion","me distraigo","distraccion","celular","procrastin*","flojera","habito","habitos"],
+  pomodoro:["pomodoro","concentrarme","concentracion","me distraigo","distraccion","procrastin*","flojera","habito","habitos"],
   espacio:["espacio de estudio","escritorio","lugar para estudiar","descanso","descansos"],
   semana:["organizar","organizarme","planificar","planificacion","semana","agenda","tiempo"],
   examenes:["estudiar para","prepararme","repasar","repaso","memorizar"],
@@ -829,17 +900,17 @@ const CLAVES = {
   torneos:["torneo","torneos","deporte","deportes","baileton","juegos de mesa","campeonato"],
   interhouse:["interhouse","casas","houses"],
   festivos:["feriado","feriados","festivo","festivos","dia de la madre","dia del padre","dia del maestro","aniversario","celebracion"],
-  reglamento:["reglamento","norma","normas","regla","reglas","uniforme","celulares","sancion","conducta","convivencia","disciplina","derechos","deberes"],
+  reglamento:["reglamento","norma","normas","regla","reglas","uniforme","celular","celulares","usar el celular","telefono","sancion","conducta","convivencia","disciplina","derechos","deberes"],
   residencia:["residencia","permiso","permisos","salida","salidas","dormitorio","visitas"],
   ciencias:["ciencia","ciencias","science","science without limits","experimento","experimentos","laboratorio","concytec","feria","periodico mural"],
   robotica:["robotica","robot","robots","beyond robotics","arduino","programacion","electronica","mecatronica","ingenieria"],
   oscep:["oscep","orquesta","sinfonica","musica","instrumento","instrumentos","violin","audicion","audiciones","ensayos","repertorio"],
   postular:["postular","postulacion","aplicar","requisitos","carta de motivacion","recomendacion","cv"],
   academico:["faro academico","academico","academica","clase","clases","curso","cursos","notas","diploma","ib","asignatura","asignaturas"],
-  consejos:["brujula","consejo","consejos","tip","tips","estudiar","motivacion","productividad","bienestar"],
+  consejos:["brujula","consejo","consejos","tip","tips","estudiar","motivacion","productividad"],
   vida:["puerto coar","vida coar","vida en el coar","evento","eventos","actividades"],
   clubes:["tripulacion","la tripulacion","club","clubes","taller","talleres","extracurricular"],
-  oportunidades:["nuevos horizontes","horizontes","oportunidad","oportunidades","beca","becas","convocatoria","convocatorias","voluntariado","voluntariados","intercambio","intercambios","pasantia"],
+  oportunidades:["nuevos horizontes","horizontes","oportunidad","oportunidades","beca","becas","convocatoria","convocatorias","voluntariado","voluntariados","intercambio","intercambios","pasantia","estudiar afuera","estudiar en el extranjero","extranjero","beca 18","pronabec"],
   gaceta:["noticoar","noti coar","diario","noticia","noticias","novedad","novedades","periodico","que hay de nuevo","anuncio","anuncios"],
   canal:["canal","techworld","creadores","actualizaciones"],
   quien:["quien eres","que eres","que haces","como funcionas","quienes son","guidelight"],
@@ -847,7 +918,7 @@ const CLAVES = {
   saludo:["hola","holi","buenas","buenos dias","buenas tardes","buenas noches","hey","que tal"],
   gracias:["gracias","muchas gracias","genial","chevere","bacan","pepa"]
 };
-const PESO = { crisis:20, estres:1.3, saludo:.4, gracias:.4, quien:.8 };
+const PESO = { crisis:20, estres:1.3, bienestar:1.6, sueno:1.6, cas:1.4, oportunidades:1.3, saludo:.4, gracias:.4, quien:.8 };
 
 /* =====================================================================
    A PARTIR DE AQUÍ ESTÁ EL FUNCIONAMIENTO. No necesitas tocarlo.
@@ -1005,6 +1076,7 @@ function mensajeBot(id){
   let html = typeof r.texto === "function" ? r.texto() : r.texto;
   if (r.enlaces) html += `<div class="res">${r.enlaces.map((k) => tarjetaEnlace(ENLACES[k])).join("")}</div>`;
   m.innerHTML = html;
+  recordar("assistant", html);
   if (r.especial === "apa") m.appendChild(herramientaAPA());
   if (r.seguir && r.seguir.length) {
     const cont = document.createElement("div");
@@ -1045,14 +1117,145 @@ function detectar(texto){
   }
   return mejor || "noentiendo";
 }
+/* Fechas del IB: el texto cambia solo según el día */
+function hoyISO(){ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+function diaMes(iso){ const [, m, d] = iso.split("-").map(Number); return `${d} de ${MESES[m - 1]}`; }
+function textoIB(){
+  const hoy = hoyISO(), rango = `del ${diaMes(FECHAS_IB.inicio)} al ${diaMes(FECHAS_IB.fin)}`;
+  if (hoy < FECHAS_IB.inicio) return `Los exámenes IB de la convocatoria de noviembre 2026 van <strong>${rango}</strong>.`;
+  if (hoy <= FECHAS_IB.fin) return `Los exámenes IB de noviembre 2026 están en curso: van <strong>${rango}</strong>. ¡Mucho éxito!`;
+  return `Los exámenes IB de noviembre 2026 ya terminaron (fueron ${rango}). Los resultados se publican en <strong>${FECHAS_IB.resultados}</strong>; tu coordinador o coordinadora IB confirmará la fecha exacta.`;
+}
+function extraDato(clave){ const v = (DATOS[clave] || "").trim(); return v ? `<p>${esc(v)}</p>` : ""; }
+
+/* Glosario: «¿qué es TEMP?» */
+let terminoActual = null;
+R.glosario = { texto:() => terminoActual ? `<p><strong>${esc(terminoActual.nombre)}</strong>: ${esc(terminoActual.significado)}</p>` : R.noentiendo.texto };
+function buscarGlosario(texto){
+  const t = normalizar(texto).replace(/[¿?¡!.,;:()"']/g, " ").replace(/\s+/g, " ").trim();
+  const pide = /(^| )(que es|que son|que significa|que significan|significado|que quiere decir|definicion)( |$)/.test(t);
+  for (const g of GLOSARIO) {
+    for (const termino of g.terminos) {
+      if (coincide(t, normalizar(termino)) && (pide || t.split(" ").length <= 2)) return g;
+    }
+  }
+  return null;
+}
+function decidir(texto){
+  const id = detectar(texto);
+  if (id === "crisis") return id;
+  const g = buscarGlosario(texto);
+  if (g) {
+    if (g.tema && R[g.tema]) return g.tema;
+    terminoActual = g;
+    return "glosario";
+  }
+  return id;
+}
+
+/* Conversación reciente: la IA la usa para entender preguntas como «¿y para 4to?» */
+const historial = [];
+function recordar(rol, texto){
+  const limpio = String(texto).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 600);
+  if (limpio) historial.push({ rol, texto: limpio });
+  while (historial.length > 8) historial.shift();
+}
+
+/* Preguntas que siempre responde GuideLight sin IA (seguridad, herramientas y saludos) */
+const SIEMPRE_LOCAL = ["crisis", "apa", "gaceta", "saludo", "gracias", "glosario"];
+
 function preguntar(texto, idForzado){
   mensajeUsuario(texto);
-  const id = idForzado || detectar(texto);
+  const previo = historial.slice();
+  recordar("user", texto);
+  const id = idForzado || decidir(texto);
   mostrarEscribiendo();
+  if (!idForzado && IA_URL && !SIEMPRE_LOCAL.includes(id)) { preguntarIA(texto, id, previo); return; }
   const largo = R[id] && typeof R[id].texto === "string" ? R[id].texto.length : 200;
   setTimeout(() => { quitarEscribiendo(); mensajeBot(id); }, sinMovimiento ? 150 : 450 + Math.min(650, largo));
 }
-function reiniciar(){ quitarEscribiendo(); msgs.innerHTML = ""; mensajeBot("inicio"); }
+
+/* ---------- Inteligencia artificial ---------- */
+function textoPlano(html){
+  return String(html).replace(/<li>/g, "\n- ").replace(/<\/(p|ul|ol)>/g, "\n").replace(/<[^>]+>/g, "").replace(/[ \t]+/g, " ").replace(/\s*\n\s*/g, "\n").trim();
+}
+const DATOS_NOMBRES = {
+  comedor:"horarios del comedor", enfermeria:"enfermería (ubicación y horario)", bienestar:"cómo pedir cita con bienestar o psicología",
+  visitas:"visitas de las familias", salidas:"fechas de las salidas generales", uniforme:"uniforme de cada día",
+  perdidos:"objetos perdidos", faltas:"cómo justificar una inasistencia", horarios:"horarios de clase por sección",
+  entregas:"fechas internas de Monografía, IA, TdC y CAS", eventos:"fechas de torneos, Interhouse y aniversario",
+  robotica:"cómo unirse a Beyond Robotics y cuándo se reúne", ciencias:"cómo unirse a Science without Limits y fecha de la feria",
+  oscep:"audiciones y ensayos de la OSCEP"
+};
+function contextoIA(){
+  const partes = [];
+  partes.push(`Fecha de hoy: ${hoyISO()}.`);
+  partes.push(`Exámenes IB de noviembre 2026: del ${FECHAS_IB.inicio} al ${FECHAS_IB.fin}. Resultados: ${FECHAS_IB.resultados}.`);
+  partes.push("GLOSARIO DEL COAR:\n" + GLOSARIO.map((g) => `- ${g.terminos.join(" / ")}: ${g.significado}`).join("\n"));
+  const llenos = Object.entries(DATOS).filter(([, v]) => v.trim());
+  const vacios = Object.entries(DATOS).filter(([, v]) => !v.trim()).map(([k]) => DATOS_NOMBRES[k] || k);
+  if (llenos.length) partes.push("DATOS DEL COAR:\n" + llenos.map(([k, v]) => `- ${DATOS_NOMBRES[k] || k}: ${v}`).join("\n"));
+  if (vacios.length) partes.push("DATOS QUE GUIDELIGHT TODAVÍA NO TIENE (no los inventes; sugiere preguntar al tutor o tutora): " + vacios.join("; ") + ".");
+  partes.push("TEMAS DE GUIDELIGHT:\n" + TEMAS.map((t) => `- ${t.nombre}: ${t.resumen} Incluye: ${t.puntos.join("; ")}.`).join("\n"));
+  const fuera = ["inicio", "noentiendo", "saludo", "gracias", "glosario", "crisis", "opinion", "canal"];
+  partes.push("RESPUESTAS DE GUIDELIGHT:\n" + Object.entries(R).filter(([k]) => !fuera.includes(k)).map(([k, r]) => {
+    const html = typeof r.texto === "function" ? r.texto() : r.texto;
+    return `[${ETIQUETAS[k] || k}] ${textoPlano(html)}`;
+  }).join("\n"));
+  partes.push("NOTICIAS DEL COAR (NotiCOAR):\n" + ordenarPorFecha(NOTICIAS).map((n) => `- ${n.fecha} · ${n.titulo}: ${n.texto}`).join("\n"));
+  partes.push("AVISOS DEL EQUIPO TECHWORLD:\n" + ordenarPorFecha(CANAL).map((n) => `- ${n.fecha}: ${n.texto}`).join("\n"));
+  partes.push("ENLACES ÚTILES:\n" + Object.values(ENLACES).map((e) => `- ${e.titulo}: ${e.url}`).join("\n"));
+  return partes.join("\n\n").slice(0, 16000);
+}
+function formatoIA(texto){
+  const enlazar = (t) => t.replace(/(https?:\/\/[^\s<)]+[^\s<).,;:])/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  const linea = (t) => enlazar(esc(t)).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  return String(texto).trim().split(/\n\s*\n/).map((bloque) => {
+    const lineas = bloque.split("\n").map((l) => l.trim()).filter(Boolean);
+    if (lineas.length && lineas.every((l) => /^([-*•]|\d+[.)])\s+/.test(l))) {
+      const ordenada = /^\d/.test(lineas[0]);
+      const items = lineas.map((l) => `<li>${linea(l.replace(/^([-*•]|\d+[.)])\s+/, ""))}</li>`).join("");
+      return ordenada ? `<ol>${items}</ol>` : `<ul>${items}</ul>`;
+    }
+    return `<p>${lineas.map(linea).join("<br>")}</p>`;
+  }).join("");
+}
+function mensajeIA(texto, idLocal){
+  const fila = filaBot();
+  const m = document.createElement("div");
+  m.className = "msg bot";
+  let html = formatoIA(texto);
+  const r = R[idLocal];
+  if (r && r.enlaces && idLocal !== "noentiendo") html += `<div class="res">${r.enlaces.map((k) => tarjetaEnlace(ENLACES[k])).join("")}</div>`;
+  html += `<p class="ia-nota">${ico("chispa")}Respuesta con IA · confirma los datos importantes con tu tutor o tutora</p>`;
+  m.innerHTML = html;
+  fila.appendChild(m);
+  msgs.appendChild(fila); bajar();
+  recordar("assistant", texto);
+}
+async function preguntarIA(texto, idLocal, previo){
+  const ctrl = new AbortController();
+  const limite = setTimeout(() => ctrl.abort(), 25000);
+  try {
+    const r = await fetch(IA_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pregunta: texto, contexto: contextoIA(), historial: previo }),
+      signal: ctrl.signal
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.respuesta) throw new Error(data.error || "HTTP " + r.status);
+    quitarEscribiendo();
+    mensajeIA(data.respuesta, idLocal);
+  } catch (e) {
+    console.warn("GuideLight IA no disponible:", e.message);
+    quitarEscribiendo();
+    mensajeBot(idLocal);
+  } finally {
+    clearTimeout(limite);
+  }
+}
+function reiniciar(){ quitarEscribiendo(); msgs.innerHTML = ""; historial.length = 0; mensajeBot("inicio"); historial.length = 0; }
 function enviarMensaje(){
   const input = $("#chat-input");
   const texto = input.value.trim();
@@ -1139,6 +1342,8 @@ function herramientaAPA(){
   });
   return caja;
 }
+
+if (IA_URL) $(".chat-est").lastChild.textContent = "en línea · con IA";
 
 /* ---------- Califica GuideLight ---------- */
 const escala = $("#escala");
