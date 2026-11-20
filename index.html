@@ -708,9 +708,12 @@ const TEMAS = [
     enlaces:["oportunidades"] }
 ];
 
-/* ---------- 5. CALIFICACIONES ----------
-   true = modo de prueba (no guarda nada). Lo conectamos a un Google Form al publicar. */
-const MODO_PRUEBA = true;
+/* ---------- 5. CALIFICACIONES (Google Form) ----------
+   Pega entre las comillas el "enlace prellenado" del Google Form de Califica.
+   Para sacarlo: en el formulario, menú ⋮ → "Obtener enlace prellenado" y responde así:
+   nota = 10 · recomendaciones = RECOMENDACION · nombre = NOMBRE. Luego "Obtener enlace" y "Copiar enlace".
+   Si se deja vacío, Califica queda en modo de prueba (no guarda nada). */
+const FORM_CALIFICA = "";
 
 /* ---------- 6. FECHAS DEL IB ----------
    GuideLight usa estas fechas para saber si los exámenes vienen, están en curso o ya terminaron. */
@@ -780,7 +783,7 @@ const ETIQUETAS = {
   repositorio:"RevisionDojo", biblioteca:"Biblioteca Coarina", apa:"Citar en APA", nucleo:"Monografía, TdC y CAS",
   prioridades:"Mis prioridades", smart:"Metas SMART", pomodoro:"Técnica Pomodoro", espacio:"Mi espacio de estudio",
   estres:"Siento mucha presión", examenes:"Estudiar para exámenes", semana:"Organizar mi semana",
-  torneos:"Torneos", interhouse:"Interhouse", festivos:"Días festivos", reglamento:"Reglamento interno", residencia:"Residencia y permisos",
+  torneos:"Torneos", interhouse:"Interhouse", festivos:"Días festivos", reglamento:"Reglamento interno", residencia:"Residencia y horarios",
   ciencias:"Science without Limits", robotica:"Beyond Robotics", oscep:"OSCEP COAR LP", postular:"Cómo postular",
   juegos:"Juegos Florales", gaceta:"Ver NotiCOAR", bienestar:"Hablar con bienestar", sueno:"No puedo dormir", cas:"¿Qué es CAS?", "#califica":"Ir a Califica", "#temas":"Ver los 5 temas", "#canal":"Ver el Canal TechWorld"
 };
@@ -813,9 +816,9 @@ const R = {
     seguir:["smart","semana"] },
   smart:{ texto:`<p>Una meta <strong>SMART</strong> es:</p><ul><li><strong>Específica:</strong> dice exactamente qué harás.</li><li><strong>Medible:</strong> sabes cuándo está lista.</li><li><strong>Alcanzable:</strong> realista con tu tiempo.</li><li><strong>Relevante:</strong> te acerca a tu objetivo.</li><li><strong>Con tiempo:</strong> tiene fecha límite.</li></ul><p>Ejemplo: «Terminar el esquema de mi monografía el jueves a las 6 p. m.».</p>`,
     seguir:["pomodoro","prioridades"] },
-  pomodoro:{ texto:`<p>La técnica <strong>Pomodoro</strong>: 25 minutos de concentración total y 5 de descanso. Cada cuatro bloques, toma un descanso largo de 15 a 30 minutos.</p><p>Deja el celular lejos y empieza por la tarea que más estás evitando.</p>`,
+  pomodoro:{ texto:`<p>La técnica <strong>Pomodoro</strong>: 25 minutos de concentración total y 5 de descanso. Cada cuatro bloques, toma un descanso largo de 15 a 30 minutos.</p><p>Cierra las pestañas que no necesitas y empieza por la tarea que más estás evitando.</p>`,
     seguir:["espacio","semana"] },
-  espacio:{ texto:`<p>Arma tu espacio de estudio: mesa ordenada, buena luz, agua cerca y el celular lejos. Cada bloque de estudio, levántate, estírate y descansa la vista.</p>`,
+  espacio:{ texto:`<p>Arma tu espacio de estudio: mesa ordenada, buena luz, agua cerca y solo las pestañas que necesitas abiertas. Cada bloque de estudio, levántate, estírate y descansa la vista.</p>`,
     seguir:["pomodoro","estres"] },
   semana:{ texto:`<p>Para organizar tu semana:</p><ol><li>El domingo anota todas tus entregas y evaluaciones.</li><li>Elige tus 3 prioridades de cada día.</li><li>Divide los trabajos grandes, como la monografía o los IA, en bloques Pomodoro.</li><li>Deja espacios libres: siempre aparece algo de último momento.</li></ol>`,
     seguir:["prioridades","pomodoro"] },
@@ -826,7 +829,7 @@ const R = {
   bienestar:{ texto:() => `<p>El equipo de <strong>bienestar del COAR</strong> está para escucharte, sea por estrés, problemas de convivencia o porque extrañas a tu familia. No tienes que esperar a que todo se ponga difícil para ir.</p>` +
       (DATOS.bienestar.trim() ? `<p>${esc(DATOS.bienestar)}</p>` : `<p>Para pedir una cita, acércate a tu tutor o tutora: te dirá cómo y cuándo atienden.</p>`),
     seguir:["estres","sueno"] },
-  sueno:{ texto:`<p>Dormir bien también es estudiar: el descanso ayuda a fijar lo que aprendiste. Prueba esto:</p><ul><li>Acuéstate y levántate a la misma hora, incluso antes de un examen.</li><li>Deja el celular lejos de 30 a 60 minutos antes de dormir.</li><li>No estudies en la cama y evita el café en la tarde.</li><li>Si no te duermes en unos 20 minutos, levántate y haz algo tranquilo hasta que te dé sueño.</li></ul><p>Si te pasa seguido, habla con bienestar o con tu tutor o tutora.</p>`,
+  sueno:{ texto:`<p>Dormir bien también es estudiar: el descanso ayuda a fijar lo que aprendiste. Prueba esto:</p><ul><li>Respeta la hora de dormir de la resi: 9:50 p. m. (domingos, 9:30 p. m.), incluso antes de un examen.</li><li>Termina con la laptop en el salón con tiempo, para que tu mente se relaje antes de entrar a la resi.</li><li>No estudies en la cama y evita el café en la tarde.</li><li>Si no te duermes en unos 20 minutos, respira despacio y piensa en algo tranquilo.</li></ul><p>Si te pasa seguido, habla con bienestar o con tu tutor o tutora.</p>`,
     seguir:["bienestar","estres"] },
   cas:{ texto:`<p><strong>CAS</strong> significa Creatividad, Actividad y Servicio. Es parte del núcleo del Diploma IB:</p><ul><li>Lo desarrollas durante unos 18 meses del Diploma.</li><li>Incluye experiencias de creatividad, actividad y servicio, y un proyecto CAS.</li><li>Reflexionas sobre lo que aprendes en cada experiencia.</li></ul><p>Las actividades de los clubes pueden contar como experiencias CAS si cumplen los criterios. Confírmalo con tu coordinador o coordinadora CAS.</p>`,
     seguir:["clubes","nucleo"] },
@@ -842,7 +845,7 @@ const R = {
     seguir:["gaceta","torneos"] },
   reglamento:{ texto:`<p>El <strong>Reglamento Interno</strong> reúne las normas de convivencia y disciplina: uniforme, uso de celulares y espacios comunes, y tus derechos y deberes. Para una duda puntual, consúltala con tu tutor o tutora para tener la versión vigente.</p>`,
     seguir:["residencia","vida"] },
-  residencia:{ texto:`<p>La residencia, los permisos y las salidas tienen sus propias reglas dentro del Reglamento Interno. Antes de pedir un permiso, consulta los pasos con tu tutor o tutora.</p>`,
+  residencia:{ texto:`<p><strong>Horarios de la residencia</strong></p><ul><li><strong>Ingreso a la resi:</strong> 8:30 p. m. Los domingos, 8:00 p. m., porque los lunes hay formación.</li><li><strong>Hora de dormir:</strong> 9:50 p. m. Los domingos, 9:30 p. m.</li></ul><p><strong>Uso de la laptop en la noche:</strong> depende de tu grado, de si tienes un permiso especial o de si haces una actividad extracurricular coordinada antes con BYDE. Se usa en los salones, como máximo hasta las 9:00 p. m. (9:20 p. m. a lo mucho).</p><p>Los permisos y las salidas tienen sus propias reglas en el Reglamento Interno: antes de pedir uno, consulta los pasos con tu tutor o tutora.</p>`,
     seguir:["reglamento","vida"] },
   juegos:{ texto:`<p>Los <strong>Juegos Florales Literarios por el X Aniversario</strong> fueron un concurso de cuento breve, poesía y ensayo sobre el aniversario del COAR LP y la diversidad cultural. Las inscripciones fueron del 1 al 7 de setiembre y los trabajos se entregaron hasta el 18.</p>`,
     seguir:["gaceta","festivos"] },
@@ -901,7 +904,7 @@ const CLAVES = {
   interhouse:["interhouse","casas","houses"],
   festivos:["feriado","feriados","festivo","festivos","dia de la madre","dia del padre","dia del maestro","aniversario","celebracion"],
   reglamento:["reglamento","norma","normas","regla","reglas","uniforme","celular","celulares","usar el celular","telefono","sancion","conducta","convivencia","disciplina","derechos","deberes"],
-  residencia:["residencia","permiso","permisos","salida","salidas","dormitorio","visitas"],
+  residencia:["residencia","resi","permiso","permisos","permiso especial","salida","salidas","dormitorio","visitas","laptop","laptops","computadora","hora de dormir","a que hora dormimos","dormimos","ingreso a la resi","entrar a la resi","formacion","byde"],
   ciencias:["ciencia","ciencias","science","science without limits","experimento","experimentos","laboratorio","concytec","feria","periodico mural"],
   robotica:["robotica","robot","robots","beyond robotics","arduino","programacion","electronica","mecatronica","ingenieria"],
   oscep:["oscep","orquesta","sinfonica","musica","instrumento","instrumentos","violin","audicion","audiciones","ensayos","repertorio"],
@@ -1357,16 +1360,57 @@ function reaccionar(nota){
   escala.querySelectorAll("label").forEach((l, i) => l.classList.toggle("on", nota && i + 1 < nota));
 }
 escala.addEventListener("change", () => reaccionar(Number(($('input[name="nota"]:checked') || {}).value || 0)));
-if (MODO_PRUEBA) $("#cal-prueba").hidden = false;
-$("#cal-form").addEventListener("submit", (e) => {
+/* Lee el enlace prellenado: encuentra qué pregunta del Form es la nota, las recomendaciones y el nombre */
+function leerFormCalifica(enlace){
+  if (!enlace || !enlace.trim()) return null;
+  try {
+    const u = new URL(enlace.trim());
+    if (!/docs\.google\.com$/.test(u.hostname) || !u.pathname.includes("/forms/")) return null;
+    const campos = {};
+    u.searchParams.forEach((valor, clave) => {
+      if (!clave.startsWith("entry.")) return;
+      const v = valor.trim().toUpperCase();
+      if (v === "10") campos.nota = clave;
+      else if (v === "RECOMENDACION" || v === "RECOMENDACIÓN") campos.texto = clave;
+      else if (v === "NOMBRE") campos.nombre = clave;
+    });
+    if (!campos.nota) return null;
+    return { accion: u.origin + u.pathname.replace(/\/(viewform|formResponse)\/?$/, "") + "/formResponse", campos };
+  } catch (e) { return null; }
+}
+const CALIFICA = leerFormCalifica(FORM_CALIFICA);
+if (FORM_CALIFICA.trim() && !CALIFICA) console.warn("GuideLight: el enlace de FORM_CALIFICA no es un enlace prellenado válido.");
+if (!CALIFICA) $("#cal-prueba").hidden = false;
+
+$("#cal-form").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const estado = $("#cal-estado");
+  const form = e.target, estado = $("#cal-estado"), boton = form.querySelector('button[type="submit"]');
   const elegido = $('input[name="nota"]:checked');
   if (!elegido) { estado.className = "estado falta"; estado.textContent = "Elige una nota del 1 al 10 para enviar."; return; }
-  /* Aquí se enviará la calificación cuando conectemos el formulario. */
+  const nota = elegido.value;
+  if (CALIFICA) {
+    const datos = new URLSearchParams();
+    datos.append(CALIFICA.campos.nota, nota);
+    const texto = $("#cal-texto").value.trim(), nombre = $("#cal-nombre").value.trim();
+    if (CALIFICA.campos.texto && texto) datos.append(CALIFICA.campos.texto, texto);
+    if (CALIFICA.campos.nombre && nombre) datos.append(CALIFICA.campos.nombre, nombre);
+    boton.disabled = true;
+    estado.className = "estado";
+    estado.textContent = "Enviando…";
+    try {
+      /* Google Forms no deja leer su respuesta (no-cors), pero sí guarda el envío */
+      await fetch(CALIFICA.accion, { method: "POST", mode: "no-cors", body: datos });
+    } catch (err) {
+      boton.disabled = false;
+      estado.className = "estado falta";
+      estado.textContent = "No se pudo enviar. Revisa tu conexión e inténtalo otra vez.";
+      return;
+    }
+    boton.disabled = false;
+  }
   estado.className = "estado bien";
-  estado.textContent = `¡Gracias! Tu nota fue ${elegido.value}/10.`;
-  e.target.reset();
+  estado.textContent = CALIFICA ? `¡Gracias! Guardamos tu nota: ${nota}/10.` : `¡Gracias! Tu nota fue ${nota}/10.`;
+  form.reset();
   reaccionar(0);
 });
 
