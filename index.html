@@ -736,7 +736,7 @@ const TEMAS = [
    Para sacarlo: en el formulario, menú ⋮ → "Obtener enlace prellenado" y responde así:
    nota = 10 · recomendaciones = RECOMENDACION · nombre = NOMBRE. Luego "Obtener enlace" y "Copiar enlace".
    Si se deja vacío, Califica queda en modo de prueba (no guarda nada). */
-const FORM_CALIFICA = "";
+const FORM_CALIFICA = "https://docs.google.com/forms/d/e/1FAIpQLSc5AxQ15kby13zp7bA-ZeJuBqKa9hM8Wh4hy-dw01wxwrBp0A/viewform?usp=pp_url&entry.1848058664=10&entry.1354953917=RECOMENDACION&entry.1283929735=NOMBRE";
 
 /* ---------- 6. FECHAS DEL IB ----------
    GuideLight usa estas fechas para saber si los exámenes vienen, están en curso o ya terminaron. */
@@ -1602,6 +1602,14 @@ $("#cal-form").addEventListener("submit", async (e) => {
   const elegido = $('input[name="nota"]:checked');
   if (!elegido) { estado.className = "estado falta"; estado.textContent = "Elige una nota del 1 al 10 para enviar."; return; }
   const nota = elegido.value;
+  /* Una calificación por laptop al día, para que nadie llene el formulario de notas falsas */
+  const CLAVE_CAL = "guidelight-califica-ultima";
+  let ultima = 0; try { ultima = Number(localStorage.getItem(CLAVE_CAL) || 0); } catch (err) { /* sin almacenamiento */ }
+  if (CALIFICA && Date.now() - ultima < 20 * 3600 * 1000) {
+    estado.className = "estado bien";
+    estado.textContent = "Ya calificaste hoy desde esta laptop. ¡Gracias! Puedes volver a calificar mañana.";
+    return;
+  }
   if (CALIFICA) {
     const datos = new URLSearchParams();
     datos.append(CALIFICA.campos.nota, nota);
@@ -1621,6 +1629,7 @@ $("#cal-form").addEventListener("submit", async (e) => {
       return;
     }
     boton.disabled = false;
+    try { localStorage.setItem(CLAVE_CAL, String(Date.now())); } catch (err) { /* sin almacenamiento */ }
   }
   estado.className = "estado bien";
   estado.textContent = CALIFICA ? `¡Gracias! Guardamos tu nota: ${nota}/10.` : `¡Gracias! Tu nota fue ${nota}/10.`;
