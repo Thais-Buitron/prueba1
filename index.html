@@ -649,7 +649,7 @@ section[id]{scroll-margin-top:92px}
 const NOTICIAS = [
   { fecha:"2026-11-14", etiqueta:"Aviso", portada:true,
     titulo:"¡Terminaron los exámenes IB!",
-    texto:"Felicitaciones, promo: la convocatoria de noviembre 2026 del Diploma IB terminó el 13 de noviembre. Los resultados se publican en enero de 2027; tu coordinador o coordinadora IB confirmará la fecha exacta. Ahora toca descansar." },
+    texto:"Felicitaciones, promo: la convocatoria de noviembre 2026 del Diploma IB terminó el 13 de noviembre. Los resultados se publican el 15 de diciembre de 2026 para los estudiantes y, desde el 16 de diciembre, para el colegio. Ahora toca descansar." },
   { fecha:"2026-10-10", etiqueta:"Próximamente",
     titulo:"Feria de ciencias con apoyo de CONCYTEC",
     texto:"Science without Limits prepara una feria para después de los exámenes IB. Dicen que habrá una sorpresa…" },
@@ -714,7 +714,7 @@ const MODO_PRUEBA = true;
 
 /* ---------- 6. FECHAS DEL IB ----------
    GuideLight usa estas fechas para saber si los exámenes vienen, están en curso o ya terminaron. */
-const FECHAS_IB = { inicio:"2026-10-23", fin:"2026-11-13", resultados:"enero de 2027" };
+const FECHAS_IB = { inicio:"2026-10-23", fin:"2026-11-13", resultados:"el 15 de diciembre de 2026 para los estudiantes y, desde el 16 de diciembre, para el colegio" };
 
 /* ---------- 7. GLOSARIO DEL COAR ----------
    Siglas y palabras propias del colegio. GuideLight las reconoce («¿qué es TEMP?»)
@@ -880,7 +880,7 @@ const CLAVES = {
   crisis:["suicid*","matarme","quitarme la vida","hacerme dano","no quiero vivir","autolesion*","cortarme","quiero morir"],
   apa:["apa","cita","citas","citar","referencia","referencias","bibliografia"],
   juegos:["juegos florales","florales","concurso literario","cuento","poesia"],
-  cronograma:["cronograma","rol de examenes","examen","examenes","examenes ib","simulacro","simulacros","evaluacion","evaluaciones","fecha de examen","fechas"],
+  cronograma:["cronograma","resultados del ib","resultados","resultado","cuando salen","notas del ib","rol de examenes","examen","examenes","examenes ib","simulacro","simulacros","evaluacion","evaluaciones","fecha de examen","fechas"],
   horarios:["horario","horarios","salon","salones","aula","aulas"],
   concursos:["concurso","concursos","bases","drive"],
   tramites:["tramite","tramites","constancia","certificado","certificados","consulta academica"],
@@ -1124,7 +1124,7 @@ function textoIB(){
   const hoy = hoyISO(), rango = `del ${diaMes(FECHAS_IB.inicio)} al ${diaMes(FECHAS_IB.fin)}`;
   if (hoy < FECHAS_IB.inicio) return `Los exámenes IB de la convocatoria de noviembre 2026 van <strong>${rango}</strong>.`;
   if (hoy <= FECHAS_IB.fin) return `Los exámenes IB de noviembre 2026 están en curso: van <strong>${rango}</strong>. ¡Mucho éxito!`;
-  return `Los exámenes IB de noviembre 2026 ya terminaron (fueron ${rango}). Los resultados se publican en <strong>${FECHAS_IB.resultados}</strong>; tu coordinador o coordinadora IB confirmará la fecha exacta.`;
+  return `Los exámenes IB de noviembre 2026 ya terminaron (fueron ${rango}). Los resultados se publican <strong>${FECHAS_IB.resultados}</strong>.`;
 }
 function extraDato(clave){ const v = (DATOS[clave] || "").trim(); return v ? `<p>${esc(v)}</p>` : ""; }
 
