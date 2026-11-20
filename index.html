@@ -327,6 +327,29 @@ section[id]{scroll-margin-top:92px}
 .apa-out{margin-top:10px;padding:10px 12px 10px calc(12px + 1.6em);text-indent:-1.6em;border-radius:12px;background:var(--gold-soft);font-size:14.5px;line-height:1.5;overflow-wrap:anywhere}
 .apa-out.vacio{color:var(--muted)}
 .apa-pie{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:10px;font-size:12.5px;color:var(--muted)}
+.apa-auto{display:flex;flex-direction:column;gap:6px}
+.apa-lbl{font-size:13px;font-weight:800;color:var(--navy)}
+.apa-fila{display:flex;gap:8px}
+.apa-fila input{flex:1;min-width:0;height:44px;padding:0 13px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font:600 15px var(--f-body)}
+.apa-fila input:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.apa-btn{height:44px;padding:0 18px;border:0;border-radius:12px;background:var(--grad);color:#fff;font:800 14.5px var(--f-body);cursor:pointer;box-shadow:var(--glow)}
+.apa-btn:disabled{opacity:.6;cursor:progress}
+.apa-estado{min-height:1em;font-size:13px;font-weight:700;color:var(--muted)}
+.apa-estado.bien{color:var(--ok,#1E8E5A)}.apa-estado.falta{color:var(--gold-ink)}
+.apa-res{margin-top:6px}
+.apa-k{margin-top:10px;font:700 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.apa-res .apa-out{margin-top:6px}
+.apa-intext{margin-top:6px;padding:8px 12px;border-radius:12px;background:#fff;border:1px solid var(--line);font-size:14.5px;font-weight:700;color:var(--navy)}
+.apa-intext .sep{margin:0 8px;color:var(--muted)}
+.apa-avisos{margin:8px 0 0;padding-left:1.1em;font-size:12.5px;color:var(--muted)}
+.apa-man{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+.apa-man summary{cursor:pointer;font-size:13px;font-weight:800;color:var(--blue);margin-bottom:8px}
+.apa-grid textarea{width:100%;min-width:0;padding:8px 11px;border-radius:11px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font:600 15px var(--f-body);resize:vertical}
+.apa-grid textarea:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.apa-grid .opc{font-weight:600;color:var(--muted)}
+.apa-lista{margin-top:12px;border-top:1px dashed var(--line);padding-top:4px}
+.apa-lista ol{margin:6px 0 0;padding:0;list-style:none}
+.apa-lista li{padding:6px 0 6px 1.6em;text-indent:-1.6em;font-size:14px;line-height:1.5;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
 
 /* ---------- Califica ---------- */
 .califica{padding-block:clamp(76px,9vw,112px)}
@@ -808,7 +831,7 @@ const R = {
     enlaces:["biblioteca"], seguir:["apa"] },
   nucleo:{ texto:`<p>El núcleo del Diploma IB tiene tres partes:</p><ul><li><strong>Monografía:</strong> una investigación propia de hasta 4000 palabras.</li><li><strong>Teoría del Conocimiento (TdC):</strong> una exposición y un ensayo.</li><li><strong>CAS:</strong> experiencias de Creatividad, Actividad y Servicio.</li></ul><p>Lo que más ayuda es avanzar un poco cada semana.</p>`,
     enlaces:["repositorio"], seguir:["semana","cas","apa"] },
-  apa:{ texto:`<p>Completa los datos de tu fuente y te armo la referencia en formato <strong>APA (7.ª edición)</strong>.</p>`, especial:"apa" },
+  apa:{ texto:`<p>Pega el <strong>link, DOI o ISBN</strong> de tu fuente, o escribe sus datos, y te armo la referencia en <strong>APA 7.ª edición</strong> con su cita en el texto. Ve guardando tus fuentes en tu lista y, al final, cópiala ordenada para tu monografía o IA.</p><p>Tip: también puedes escribirme directo «cita https://…».</p>`, especial:"apa" },
 
   consejos:{ texto:`<p>Bienvenido a <strong>Brújula</strong>: prioridades, hábitos, planificación y bienestar. ¿Por dónde empezamos?</p>`,
     seguir:["prioridades","smart","pomodoro","espacio","estres","sueno","bienestar"] },
@@ -881,7 +904,7 @@ const R = {
 /* Palabras clave (sin tildes ni mayúsculas). Una palabra con * al final acepta cualquier terminación. */
 const CLAVES = {
   crisis:["suicid*","matarme","quitarme la vida","hacerme dano","no quiero vivir","autolesion*","cortarme","quiero morir"],
-  apa:["apa","cita","citas","citar","referencia","referencias","bibliografia"],
+  apa:["apa","cita","citas","citar","citame","citalo","citala","referencia","referencias","referenciar","bibliografia"],
   juegos:["juegos florales","florales","concurso literario","cuento","poesia"],
   cronograma:["cronograma","resultados del ib","resultados","resultado","cuando salen","notas del ib","rol de examenes","examen","examenes","examenes ib","simulacro","simulacros","evaluacion","evaluaciones","fecha de examen","fechas"],
   horarios:["horario","horarios","salon","salones","aula","aulas"],
@@ -1071,7 +1094,7 @@ function mensajeUsuario(texto){
   fila.appendChild(m);
   msgs.appendChild(fila); bajar();
 }
-function mensajeBot(id){
+function mensajeBot(id, extra){
   const r = R[id] || R.noentiendo;
   const fila = filaBot();
   const m = document.createElement("div");
@@ -1080,7 +1103,7 @@ function mensajeBot(id){
   if (r.enlaces) html += `<div class="res">${r.enlaces.map((k) => tarjetaEnlace(ENLACES[k])).join("")}</div>`;
   m.innerHTML = html;
   recordar("assistant", html);
-  if (r.especial === "apa") m.appendChild(herramientaAPA());
+  if (r.especial === "apa") m.appendChild(herramientaAPA(extra));
   if (r.seguir && r.seguir.length) {
     const cont = document.createElement("div");
     cont.className = "seguir";
@@ -1171,11 +1194,13 @@ function preguntar(texto, idForzado){
   mensajeUsuario(texto);
   const previo = historial.slice();
   recordar("user", texto);
-  const id = idForzado || decidir(texto);
+  let id = idForzado || decidir(texto);
+  const fuente = idForzado ? null : fuenteEnTexto(texto, id);
+  if (fuente) id = "apa";
   mostrarEscribiendo();
   if (!idForzado && IA_URL && !SIEMPRE_LOCAL.includes(id)) { preguntarIA(texto, id, previo); return; }
   const largo = R[id] && typeof R[id].texto === "string" ? R[id].texto.length : 200;
-  setTimeout(() => { quitarEscribiendo(); mensajeBot(id); }, sinMovimiento ? 150 : 450 + Math.min(650, largo));
+  setTimeout(() => { quitarEscribiendo(); mensajeBot(id, fuente); }, sinMovimiento ? 150 : 450 + Math.min(650, largo));
 }
 
 /* ---------- Inteligencia artificial ---------- */
@@ -1275,75 +1300,264 @@ $("#composer").addEventListener("submit", (e) => { e.preventDefault(); enviarMen
 $("#reiniciar").addEventListener("click", reiniciar);
 $("#bocadillo").addEventListener("click", () => { irA("#chat"); setTimeout(() => $("#chat-input").focus({ preventScroll: true }), sinMovimiento ? 0 : 600); });
 
-/* ---------- Generador de citas APA ---------- */
+/* ---------- Citador APA (7.ª edición) ----------
+   El estudiante pega un link, DOI o ISBN (o escribe los datos) y GuideLight busca la fuente
+   en /api/cita, arma la referencia y la cita en el texto, y la guarda en «Mi lista». */
+const CITA_URL = "/api/cita";
+const TIPOS_APA = { web:"Página web", articulo:"Artículo", libro:"Libro", video:"Video" };
+const MEDIO_APA = { web:"Nombre del sitio web", articulo:"Revista", libro:"Editorial", video:"Plataforma" };
+const punto = (s) => /[.?!]$/.test(s) ? s : s + ".";
+function inicialesDe(nombre){
+  return String(nombre || "").split(/\s+/).filter(Boolean)
+    .map((p) => p.split("-").filter(Boolean).map((q) => q[0].toLocaleUpperCase("es") + ".").join("-")).join(" ");
+}
+function autorRef(a){ if (a.organizacion) return a.organizacion; const ini = inicialesDe(a.nombre); return ini ? `${a.apellido}, ${ini}` : a.apellido; }
+function listaAutores(as){
+  const xs = as.map(autorRef);
+  if (xs.length <= 1) return xs[0] || "";
+  if (xs.length <= 20) return xs.slice(0, -1).join(", ") + " y " + xs[xs.length - 1];
+  return xs.slice(0, 19).join(", ") + ", . . . " + xs[xs.length - 1];
+}
+function fechaRef(c, completa){
+  if (!c.anio) return "s. f.";
+  if (completa && c.mes && c.dia) return `${c.anio}, ${c.dia} de ${MESES[c.mes - 1]}`;
+  if (completa && c.mes) return `${c.anio}, ${MESES[c.mes - 1]}`;
+  return c.anio;
+}
+function formatearAPA(c){
+  const tit = (c.titulo || "").trim();
+  if (!tit) return null;
+  const autor = listaAutores(c.autores || []);
+  const enlace = c.doi ? "https://doi.org/" + String(c.doi).replace(/^https?:\/\/(dx\.)?doi\.org\//i, "") : (c.url || "");
+  const medio = (c.medio || "").trim();
+  const F = fechaRef(c, c.tipo === "web" || c.tipo === "video");
+  const E = esc, I = (s) => `<i>${E(s)}</i>`;
+  let h;
+  if (c.tipo === "articulo") {
+    const fuente = medio ? `${I(medio)}${c.volumen ? ", " + I(c.volumen) : ""}${c.numero ? "(" + E(c.numero) + ")" : ""}${c.paginas ? ", " + E(c.paginas) : ""}.` : "";
+    h = autor ? `${E(punto(autor))} (${E(F)}). ${E(punto(tit))} ${fuente}` : `${E(punto(tit))} (${E(F)}). ${fuente}`;
+  } else if (c.tipo === "libro") {
+    const ed = medio ? E(punto(medio)) : "";
+    h = autor ? `${E(punto(autor))} (${E(F)}). ${I(punto(tit))} ${ed}` : `${I(punto(tit))} (${E(F)}). ${ed}`;
+  } else if (c.tipo === "video") {
+    const canal = autor || medio || "";
+    h = canal ? `${E(punto(canal))} (${E(F)}). ${I(tit)} [Video]. ${E(punto(medio || "YouTube"))}` : `${I(tit)} [Video]. (${E(F)}). ${E(punto(medio || "YouTube"))}`;
+  } else {
+    const soloOrg = (c.autores || []).length === 1 && c.autores[0].organizacion && c.autores[0].organizacion.toLowerCase() === medio.toLowerCase();
+    const sitio = medio && !soloOrg ? E(punto(medio)) : "";
+    h = autor ? `${E(punto(autor))} (${E(F)}). ${I(punto(tit))} ${sitio}` : `${I(punto(tit))} (${E(F)}). ${sitio}`;
+  }
+  h = (h.trim() + (enlace ? " " + E(enlace) : "")).replace(/\s+/g, " ").trim();
+  const plano = h.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+  // cita en el texto
+  const ap = (c.autores || []).map((a) => a.organizacion || a.apellido).filter(Boolean);
+  const anio = c.anio || "s. f.";
+  const quien = ap.length === 0 ? null : ap.length === 1 ? ap[0] : ap.length === 2 ? `${ap[0]} y ${ap[1]}` : `${ap[0]} et al.`;
+  const corto = tit.split(/[:.?!]/)[0].split(" ").slice(0, 6).join(" ");
+  const parent = quien ? `(${quien}, ${anio})` : `(${corto}, ${anio})`;
+  const narr = quien ? `${quien} (${anio})` : `${corto} (${anio})`;
+  const avisos = [];
+  if (!ap.length) avisos.push("No hay autor: la referencia empieza con el título.");
+  if (!c.anio) avisos.push("No hay fecha: se usa «s. f.» (sin fecha).");
+  if (c.tipo === "articulo" && !medio) avisos.push("Falta el nombre de la revista.");
+  return { html: h, plano, parent, narr, avisos };
+}
+
+/* Mi lista de referencias: se guarda solo en esta laptop */
+const CLAVE_LISTA = "guidelight-referencias";
+function leerLista(){ try { return JSON.parse(localStorage.getItem(CLAVE_LISTA) || "[]"); } catch (e) { return []; } }
+function guardarLista(l){ try { localStorage.setItem(CLAVE_LISTA, JSON.stringify(l)); } catch (e) { /* sin almacenamiento */ } }
+function ordenarLista(l){ return [...l].sort((a, b) => a.plano.localeCompare(b.plano, "es", { sensitivity: "base" })); }
+function pintarListas(){
+  const l = ordenarLista(leerLista());
+  document.querySelectorAll(".apa-lista").forEach((cont) => {
+    cont.hidden = !l.length;
+    cont.querySelector("[data-n]").textContent = l.length;
+    cont.querySelector("ol").innerHTML = l.map((r) => `<li>${r.html}</li>`).join("");
+  });
+}
+async function copiarRico(html, plano){
+  try {
+    if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+      await navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([html], { type: "text/html" }), "text/plain": new Blob([plano], { type: "text/plain" }) })]);
+      return true;
+    }
+    await navigator.clipboard.writeText(plano); return true;
+  } catch (e) { try { await navigator.clipboard.writeText(plano); return true; } catch (e2) { return false; } }
+}
+const sangria = (html) => `<p style="margin:0 0 0 0.5in;text-indent:-0.5in;line-height:2;font-family:'Times New Roman';font-size:12pt">${html}</p>`;
+
+/* Respaldo sin servidor: Crossref y Open Library permiten consultas desde la página */
+async function buscarEnNavegador(entrada){
+  const doi = (entrada.match(/10\.\d{4,9}\/[^\s"'<>]+/i) || [])[0];
+  if (doi) {
+    const r = await fetch("https://api.crossref.org/works/" + encodeURIComponent(doi.replace(/[).,;\]]+$/, "")));
+    if (r.ok) {
+      const m = (await r.json()).message, f = ((m.issued || {})["date-parts"] || [[]])[0] || [];
+      const tipo = /book/.test(m.type) ? "libro" : /journal-article|proceedings/.test(m.type) ? "articulo" : "web";
+      return { tipo, autores: (m.author || []).map((a) => a.family ? { apellido: a.family, nombre: a.given || "" } : { organizacion: a.name || "" }),
+        anio: f[0] ? String(f[0]) : null, titulo: (m.title || [])[0] || "", medio: tipo === "libro" ? m.publisher : (m["container-title"] || [])[0] || "",
+        volumen: m.volume || "", numero: m.issue || "", paginas: (m.page || "").replace(/-/g, "–"), doi: m.DOI };
+    }
+  }
+  const isbn = /isbn/i.test(entrada) || /^[\d\s-]{10,17}x?$/i.test(entrada.trim()) ? (entrada.replace(/isbn(-1[03])?:?/ig, "").replace(/[\s-]/g, "").match(/97[89]\d{10}|\d{9}[\dXx]/) || [])[0] : null;
+  if (isbn) {
+    const r = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+    const b = r.ok ? (await r.json())["ISBN:" + isbn] : null;
+    if (b) return { tipo: "libro", autores: (b.authors || []).map((a) => { const p = a.name.split(" "); return p.length > 1 ? { apellido: p.slice(p.length > 2 ? 1 : -1).join(" "), nombre: p.slice(0, p.length > 2 ? 1 : -1).join(" ") } : { organizacion: a.name }; }),
+      anio: ((b.publish_date || "").match(/\d{4}/) || [null])[0], titulo: b.title + (b.subtitle ? ": " + b.subtitle : ""), medio: ((b.publishers || [])[0] || {}).name || "" };
+  }
+  return null;
+}
+
 let nAPA = 0;
-function herramientaAPA(){
+function herramientaAPA(entradaInicial){
   const n = ++nAPA;
   const caja = document.createElement("div");
   caja.className = "apa";
   caja.innerHTML = `
-    <div class="apa-tabs" role="group" aria-label="Tipo de fuente">
-      <button type="button" data-tipo="web" aria-pressed="true">Página web</button>
-      <button type="button" data-tipo="libro" aria-pressed="false">Libro</button>
+    <div class="apa-auto">
+      <label class="apa-lbl" for="apa${n}-in">Pega el link, DOI o ISBN de tu fuente</label>
+      <div class="apa-fila"><input id="apa${n}-in" autocomplete="off" placeholder="https://…  ·  10.1038/…  ·  ISBN 978…"><button type="button" class="apa-btn" data-citar>Citar</button></div>
+      <p class="apa-estado" aria-live="polite"></p>
     </div>
-    <div class="apa-grid">
-      <label for="apa${n}-ap">Apellido(s) del autor<input id="apa${n}-ap" data-f="apellido" placeholder="Vargas Llosa"></label>
-      <label for="apa${n}-no">Nombre(s)<input id="apa${n}-no" data-f="nombre" placeholder="Mario"></label>
-      <label for="apa${n}-an">Año<input id="apa${n}-an" data-f="anio" inputmode="numeric" maxlength="4" placeholder="2024"></label>
-      <label for="apa${n}-ti">Título<input id="apa${n}-ti" data-f="titulo" placeholder="La ciudad y los perros"></label>
-      <label class="full" for="apa${n}-si" data-solo="web">Nombre del sitio web<input id="apa${n}-si" data-f="sitio" placeholder="Biblioteca Coarina"></label>
-      <label class="full" for="apa${n}-ur" data-solo="web">URL<input id="apa${n}-ur" data-f="url" placeholder="https://…"></label>
-      <label class="full" for="apa${n}-ed" data-solo="libro" hidden>Editorial<input id="apa${n}-ed" data-f="editorial" placeholder="Alfaguara"></label>
+    <div class="apa-res" hidden>
+      <p class="apa-k">Referencia · APA 7.ª edición</p>
+      <p class="apa-out" aria-live="polite"></p>
+      <p class="apa-k">Cita en el texto</p>
+      <p class="apa-intext"><span data-par></span><span class="sep">·</span><span data-nar></span></p>
+      <ul class="apa-avisos"></ul>
+      <div class="apa-pie"><button type="button" class="pill" data-copiar>Copiar referencia</button><button type="button" class="pill" data-copiar-cita>Copiar cita en el texto</button><button type="button" class="pill" data-guardar>+ Agregar a mi lista</button></div>
     </div>
-    <p class="apa-out vacio" aria-live="polite">Completa los campos y aquí aparece tu referencia.</p>
-    <div class="apa-pie"><button type="button" class="pill" data-copiar>Copiar referencia</button><span>Sin autor, déjalo vacío. Sin año, se usa «s. f.».</span></div>`;
-  let tipo = "web";
-  const out = caja.querySelector(".apa-out");
-  const val = (f) => caja.querySelector(`[data-f="${f}"]`).value.trim();
-  const punto = (s) => /[.?!]$/.test(s) ? s : s + ".";
-  function armar(){
-    const ap = val("apellido"), no = val("nombre"), anio = val("anio") || "s. f.", tit = val("titulo");
-    const iniciales = no.split(/\s+/).filter(Boolean).map((x) => x[0].toUpperCase() + ".").join(" ");
-    const autor = ap ? (iniciales ? `${ap}, ${iniciales}` : ap) : "";
-    if (!tit) { out.classList.add("vacio"); out.textContent = "Completa los campos y aquí aparece tu referencia."; return null; }
-    let html, plano;
-    if (tipo === "web") {
-      const sitio = val("sitio"), url = val("url");
-      const sitioH = sitio && sitio !== ap ? ` ${esc(punto(sitio))}` : "";
-      const sitioP = sitio && sitio !== ap ? ` ${punto(sitio)}` : "";
-      if (autor) {
-        html = `${esc(punto(autor))} (${esc(anio)}). <i>${esc(punto(tit))}</i>${sitioH}${url ? " " + esc(url) : ""}`;
-        plano = `${punto(autor)} (${anio}). ${punto(tit)}${sitioP}${url ? " " + url : ""}`;
-      } else {
-        html = `<i>${esc(punto(tit))}</i> (${esc(anio)}).${sitioH}${url ? " " + esc(url) : ""}`;
-        plano = `${punto(tit)} (${anio}).${sitioP}${url ? " " + url : ""}`;
-      }
-    } else {
-      const ed = val("editorial");
-      const edT = ed ? ` ${punto(ed)}` : "";
-      html = autor ? `${esc(punto(autor))} (${esc(anio)}). <i>${esc(punto(tit))}</i>${esc(edT)}` : `<i>${esc(punto(tit))}</i> (${esc(anio)}).${esc(edT)}`;
-      plano = autor ? `${punto(autor)} (${anio}). ${punto(tit)}${edT}` : `${punto(tit)} (${anio}).${edT}`;
-    }
-    out.classList.remove("vacio");
-    out.innerHTML = html;
-    return plano;
+    <details class="apa-man"${entradaInicial ? "" : ""}>
+      <summary>Revisar o completar los datos a mano</summary>
+      <div class="apa-tabs" role="group" aria-label="Tipo de fuente">${Object.entries(TIPOS_APA).map(([k, v]) => `<button type="button" data-tipo="${k}" aria-pressed="${k === "web"}">${v}</button>`).join("")}</div>
+      <div class="apa-grid">
+        <label class="full" for="apa${n}-au">Autores <span class="opc">(uno por línea: Apellido, Nombre · o el nombre de la institución)</span><textarea id="apa${n}-au" data-f="autores" rows="2" placeholder="Vargas Llosa, Mario"></textarea></label>
+        <label for="apa${n}-an">Año<input id="apa${n}-an" data-f="anio" inputmode="numeric" maxlength="4" placeholder="2024"></label>
+        <label for="apa${n}-fe" data-solo="web video">Día y mes <span class="opc">(opcional)</span><input id="apa${n}-fe" data-f="diames" placeholder="15/03"></label>
+        <label class="full" for="apa${n}-ti">Título<input id="apa${n}-ti" data-f="titulo" placeholder="Título de la fuente"></label>
+        <label class="full" for="apa${n}-me"><span data-medio>Nombre del sitio web</span><input id="apa${n}-me" data-f="medio"></label>
+        <label for="apa${n}-vo" data-solo="articulo">Volumen<input id="apa${n}-vo" data-f="volumen"></label>
+        <label for="apa${n}-nu" data-solo="articulo">Número<input id="apa${n}-nu" data-f="numero"></label>
+        <label for="apa${n}-pa" data-solo="articulo">Páginas<input id="apa${n}-pa" data-f="paginas" placeholder="45–60"></label>
+        <label class="full" for="apa${n}-ur">URL o DOI<input id="apa${n}-ur" data-f="enlace" placeholder="https://…"></label>
+      </div>
+    </details>
+    <div class="apa-lista" hidden>
+      <p class="apa-k">Mi lista de referencias (<span data-n>0</span>) · orden alfabético</p>
+      <ol></ol>
+      <div class="apa-pie"><button type="button" class="pill" data-copiar-todo>Copiar lista para mi trabajo</button><button type="button" class="pill" data-vaciar>Vaciar lista</button></div>
+    </div>`;
+  let tipo = "web", ultimo = null;
+  const $c = (s) => caja.querySelector(s);
+  const campo = (f) => caja.querySelector(`[data-f="${f}"]`);
+  const estado = (txt, clase = "") => { const e = $c(".apa-estado"); e.className = "apa-estado " + clase; e.textContent = txt; };
+  function ponerTipo(t){
+    tipo = TIPOS_APA[t] ? t : "web";
+    caja.querySelectorAll("[data-tipo]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tipo === tipo)));
+    caja.querySelectorAll("[data-solo]").forEach((l) => { l.hidden = !l.dataset.solo.split(" ").includes(tipo); });
+    $c("[data-medio]").textContent = MEDIO_APA[tipo];
   }
-  caja.querySelectorAll("input").forEach((i) => i.addEventListener("input", armar));
-  caja.querySelectorAll("[data-tipo]").forEach((b) => b.addEventListener("click", () => {
-    tipo = b.dataset.tipo;
-    caja.querySelectorAll("[data-tipo]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
-    caja.querySelectorAll("[data-solo]").forEach((l) => { l.hidden = l.dataset.solo !== tipo; });
-    armar();
-  }));
-  caja.querySelector("[data-copiar]").addEventListener("click", (e) => {
-    const boton = e.currentTarget;
-    const plano = armar();
-    const volver = (txt, ms) => { boton.textContent = txt; setTimeout(() => (boton.textContent = "Copiar referencia"), ms); };
-    if (!plano) { volver("Primero escribe el título", 1600); return; }
-    const seleccionar = () => { const r = document.createRange(); r.selectNodeContents(out); const s = window.getSelection(); s.removeAllRanges(); s.addRange(r); volver("Selecciónala y cópiala", 2200); };
-    try { navigator.clipboard.writeText(plano).then(() => volver("¡Copiada!", 1600), seleccionar); } catch (err) { seleccionar(); }
+  function leerForm(){
+    const autores = campo("autores").value.split("\n").map((x) => x.trim()).filter(Boolean).map((x) => {
+      if (x.includes(",")) { const [ap, no] = x.split(",", 2); return { apellido: ap.trim(), nombre: (no || "").trim() }; }
+      return { organizacion: x };
+    });
+    const dm = campo("diames").value.match(/(\d{1,2})\s*[/.-]\s*(\d{1,2})/);
+    const enlace = campo("enlace").value.trim();
+    const doi = (enlace.match(/10\.\d{4,9}\/\S+/) || [])[0];
+    return { tipo, autores, anio: (campo("anio").value.match(/\d{4}/) || [null])[0], dia: dm ? +dm[1] : null, mes: dm ? +dm[2] : null,
+      titulo: campo("titulo").value, medio: campo("medio").value, volumen: campo("volumen").value.trim(), numero: campo("numero").value.trim(),
+      paginas: campo("paginas").value.trim(), doi: doi || null, url: doi ? null : enlace };
+  }
+  function llenarForm(c){
+    ponerTipo(c.tipo === "capitulo" ? "libro" : c.tipo);
+    campo("autores").value = (c.autores || []).map((a) => a.organizacion || (a.nombre ? `${a.apellido}, ${a.nombre}` : a.apellido)).join("\n");
+    campo("anio").value = c.anio || "";
+    campo("diames").value = c.dia && c.mes ? `${c.dia}/${c.mes}` : "";
+    campo("titulo").value = c.titulo || "";
+    campo("medio").value = c.medio || c.sitio || c.revista || c.editorial || (c.tipo === "video" ? "YouTube" : "");
+    campo("volumen").value = c.volumen || ""; campo("numero").value = c.numero || ""; campo("paginas").value = c.paginas || "";
+    campo("enlace").value = c.doi ? "https://doi.org/" + c.doi : (c.url || "");
+  }
+  function armar(avisosExtra = []){
+    ultimo = formatearAPA(leerForm());
+    $c(".apa-res").hidden = !ultimo;
+    if (!ultimo) return;
+    $c(".apa-out").innerHTML = ultimo.html;
+    $c("[data-par]").textContent = ultimo.parent;
+    $c("[data-nar]").textContent = ultimo.narr;
+    $c(".apa-avisos").innerHTML = [...avisosExtra, ...ultimo.avisos, "Confirma que los datos coincidan con tu fuente."].map((a) => `<li>${esc(a)}</li>`).join("");
+  }
+  async function citar(entrada){
+    entrada = String(entrada || "").trim();
+    if (!entrada) { estado("Pega primero el link, DOI o ISBN.", "falta"); return; }
+    const boton = $c("[data-citar]"); boton.disabled = true;
+    estado("Buscando los datos de tu fuente…", "cargando");
+    let res = null;
+    try {
+      const ctrl = new AbortController(), lim = setTimeout(() => ctrl.abort(), 25000);
+      const r = await fetch(CITA_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ entrada }), signal: ctrl.signal });
+      clearTimeout(lim);
+      const d = await r.json().catch(() => ({}));
+      if (r.ok && d.campos) res = { campos: d.campos, avisos: d.avisos || [] };
+      else if (r.ok) res = { campos: null, avisos: d.avisos || [] };
+    } catch (e) { /* sin servidor */ }
+    if (!res || !res.campos) {
+      try { const c = await buscarEnNavegador(entrada); if (c) res = { campos: c, avisos: [] }; } catch (e) { /* sin conexión */ }
+    }
+    boton.disabled = false;
+    if (res && res.campos && res.campos.titulo) {
+      llenarForm(res.campos); armar(res.avisos);
+      estado("¡Listo! Revisa la referencia y cópiala.", "bien");
+    } else {
+      const url = (entrada.match(/https?:\/\/[^\s"'<>]+/i) || [])[0];
+      const c = res && res.campos ? res.campos : { tipo: "web", autores: [], url: url || "", medio: url ? dominio(url) : "" };
+      llenarForm(c); armar();
+      caja.querySelector(".apa-man").open = true;
+      estado((res && res.avisos[0]) || "No pude leer esa fuente. Completa los datos abajo y la referencia se arma sola.", "falta");
+    }
+  }
+  $c("[data-citar]").addEventListener("click", () => citar($c(`#apa${n}-in`).value));
+  $c(`#apa${n}-in`).addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); citar(e.target.value); } });
+  caja.querySelectorAll(".apa-grid input, .apa-grid textarea").forEach((i) => i.addEventListener("input", () => armar()));
+  caja.querySelectorAll("[data-tipo]").forEach((b) => b.addEventListener("click", () => { ponerTipo(b.dataset.tipo); armar(); }));
+  const aviso = (boton, txt) => { const antes = boton.dataset.txt || (boton.dataset.txt = boton.textContent); boton.textContent = txt; setTimeout(() => (boton.textContent = antes), 1600); };
+  $c("[data-copiar]").addEventListener("click", async (e) => { if (ultimo) aviso(e.currentTarget, await copiarRico(sangria(ultimo.html), ultimo.plano) ? "¡Copiada!" : "Selecciónala y cópiala"); });
+  $c("[data-copiar-cita]").addEventListener("click", async (e) => { if (ultimo) aviso(e.currentTarget, await copiarRico(ultimo.parent, ultimo.parent) ? "¡Copiada!" : "Selecciónala y cópiala"); });
+  $c("[data-guardar]").addEventListener("click", (e) => {
+    if (!ultimo) return;
+    const l = leerLista();
+    if (!l.some((r) => r.plano === ultimo.plano)) l.push({ html: ultimo.html, plano: ultimo.plano });
+    guardarLista(l); pintarListas(); aviso(e.currentTarget, "¡Agregada!");
   });
+  $c("[data-copiar-todo]").addEventListener("click", async (e) => {
+    const l = ordenarLista(leerLista()); if (!l.length) return;
+    const html = `<p style="text-align:center;font-weight:bold;font-family:'Times New Roman';font-size:12pt">Referencias</p>` + l.map((r) => sangria(r.html)).join("");
+    aviso(e.currentTarget, await copiarRico(html, "Referencias\n\n" + l.map((r) => r.plano).join("\n\n")) ? "¡Lista copiada!" : "No se pudo copiar");
+  });
+  $c("[data-vaciar]").addEventListener("click", () => { guardarLista([]); pintarListas(); });
+  ponerTipo("web");
+  setTimeout(pintarListas, 0);
+  if (entradaInicial) { $c(`#apa${n}-in`).value = entradaInicial; setTimeout(() => citar(entradaInicial), 0); }
   return caja;
+}
+/* ¿El mensaje trae una fuente para citar? (link, DOI, ISBN o datos después de «citar») */
+function fuenteEnTexto(texto, id){
+  const t = texto.trim();
+  const url = (t.match(/https?:\/\/[^\s"'<>]+/i) || [])[0];
+  const doi = (t.match(/10\.\d{4,9}\/[^\s"'<>]+/i) || [])[0];
+  const isbn = /isbn/i.test(t) ? t : null;
+  const solo = url && t.replace(url, "").trim().length < 3;
+  if (doi && (id === "apa" || t.replace(doi, "").trim().length < 20)) return doi;
+  if (url && (id === "apa" || solo)) return url;
+  if (isbn && id === "apa") return t;
+  if (id === "apa") {
+    const resto = normalizar(t).replace(/\b(ayudame|ayudar|me|puedes|podrias|hazme|haz|dame|citar|cita|citas|cito|citame|citalo|citala|como|en|formato|apa|7|referencia|referencias|bibliografia|la|el|de|del|esta|este|esto|por|favor|una|un|mi|para|quiero|necesito|a|y)\b/g, " ").replace(/[^a-z0-9ñ]+/g, " ").trim();
+    if (resto.length >= 18) return t;
+  }
+  return null;
 }
 
 if (IA_URL) $(".chat-est").lastChild.textContent = "en línea · con IA";
